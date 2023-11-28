@@ -3,38 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using SocketGameProtobuf;
 
-public class RoomExitRequest : BaseRequest
+public class StartGameRequest : BaseRequest
 {
     public RoomPanel roomPanel;
 
-    private bool isExit = false;
+    private MainPack pack = null;
+
 
     public override void Awake()
     {
         requestCode = RequestCode.Room;
-        actionCode = ActionCode.Exit;
+        actionCode = ActionCode.StartGame;
         base.Awake();
     }
 
     private void Update()
     {
-        if(isExit)
+        if(pack != null)
         {
-            roomPanel.ExitRoomResponse();
-            isExit = false;
+            roomPanel.StartGameResponse(pack);
+            pack = null;
         }
     }
 
     /// <summary>
-    /// 發送離開房間
+    /// 發送協議
     /// </summary>
     public void SendRequest()
     {
         MainPack pack = new MainPack();
         pack.RequestCode = requestCode;
         pack.ActionCode = actionCode;
-        pack.Str = "RoomExit";
-
+        pack.Str = "StartGame";
         base.SendRequest(pack);
     }
 
@@ -44,6 +44,6 @@ public class RoomExitRequest : BaseRequest
     /// <param name="pack"></param>
     public override void OnResponse(MainPack pack)
     {
-        isExit = true;
+        this.pack = pack;
     }
 }

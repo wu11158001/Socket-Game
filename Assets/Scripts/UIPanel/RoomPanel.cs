@@ -16,6 +16,8 @@ public class RoomPanel : BasePanel
     public Text chat_Txt;
     public ChatRequest chatRequest;
 
+    public StartGameRequest startGameRequest;
+
     /// <summary>
     /// UI面板開始
     /// </summary>
@@ -76,20 +78,19 @@ public class RoomPanel : BasePanel
     }
 
     /// <summary>
-    /// 聊天處理
-    /// </summary>
-    /// <param name="str">聊天內容</param>
-    public void ChatResponse(string str)
-    {
-        chat_Txt.text += str + "\n";
-    }
-
-    /// <summary>
     /// 按下離開房間
     /// </summary>
     void OnLeaveClick()
     {
         roomExitRequest.SendRequest();
+    }
+
+    /// <summary>
+    /// 退出房間處理
+    /// </summary>
+    public void ExitRoomResponse()
+    {
+        uiManager.ClosePanel();
     }
 
     /// <summary>
@@ -104,16 +105,17 @@ public class RoomPanel : BasePanel
         }
 
         chatRequest.SendRequest(chat_IF.text);
-        chat_IF.text = "自己:" + chat_IF.text + "\n";
+        chat_Txt.text += "自己:" + chat_IF.text + "\n";
         chat_IF.text = "";
     }
 
     /// <summary>
-    /// 按下開始遊戲
+    /// 聊天處理
     /// </summary>
-    void OnStartClick()
+    /// <param name="str">聊天內容</param>
+    public void ChatResponse(string str)
     {
-
+        chat_Txt.text += str + "\n";
     }
 
     /// <summary>
@@ -138,10 +140,27 @@ public class RoomPanel : BasePanel
     }
 
     /// <summary>
-    /// 退出房間處理
+    /// 按下開始遊戲
     /// </summary>
-    public void ExitRoomResponse()
+    void OnStartClick()
     {
-        uiManager.ClosePanel();
+        startGameRequest.SendRequest();
+    }
+
+    /// <summary>
+    /// 開始遊戲處理
+    /// </summary>
+    /// <param name="pack"></param>
+    public void StartGameResponse(MainPack pack)
+    {
+        switch(pack.ReturnCode)
+        {
+            case ReturnCode.Fail:
+                uiManager.ShowTip("開始遊戲失敗");
+                break;
+            case ReturnCode.Succeed:
+                uiManager.ShowTip("準備開始遊戲");
+                break;
+        }
     }
 }

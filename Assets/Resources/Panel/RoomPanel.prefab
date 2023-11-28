@@ -1407,6 +1407,8 @@ GameObject:
   - component: {fileID: 3838874477151374897}
   - component: {fileID: 1984361910417635987}
   - component: {fileID: 143247808960547131}
+  - component: {fileID: 8570581801787105444}
+  - component: {fileID: 6236886374555010841}
   m_Layer: 5
   m_Name: RoomPanel
   m_TagString: Untagged
@@ -1457,6 +1459,7 @@ MonoBehaviour:
   roomExitRequest: {fileID: 1984361910417635987}
   chat_Txt: {fileID: 7476966380201551113}
   chatRequest: {fileID: 143247808960547131}
+  startGameRequest: {fileID: 8570581801787105444}
 --- !u!114 &3838874477151374897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1496,6 +1499,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomPanel: {fileID: 8785823664881426083}
+--- !u!114 &8570581801787105444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7476966380571507619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11560f5291e50ca4daf9479320dfb3d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomPanel: {fileID: 8785823664881426083}
+--- !u!114 &6236886374555010841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7476966380571507619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4adcad594ecb5884fa67cf8c740ee20d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7476966380604339063
 GameObject:
   m_ObjectHideFlags: 0

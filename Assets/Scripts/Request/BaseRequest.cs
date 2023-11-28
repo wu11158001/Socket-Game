@@ -24,7 +24,7 @@ public class BaseRequest : MonoBehaviour
     }
 
     /// <summary>
-    /// 回復
+    /// 接收協議
     /// </summary>
     /// <param name="pack"></param>
     public virtual void OnResponse(MainPack pack)
