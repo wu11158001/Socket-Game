@@ -18,12 +18,14 @@ public class GameFace : MonoBehaviour
     private ClientManager clientManager;
     private RequestManager requestManager;
     private UIManager uIManager;
+    private PlayerManager playerManager;
 
     private void Awake()
     {
         uIManager = new UIManager(this);
         clientManager = new ClientManager(this);
-        requestManager = new RequestManager(this);        
+        requestManager = new RequestManager(this);
+        playerManager = new PlayerManager(this);
 
         uIManager.OnInit();
         clientManager.OnInit();
@@ -76,10 +78,38 @@ public class GameFace : MonoBehaviour
         uIManager.ShowTip(str, isSync);
     }
 
+    /// <summary>
+    /// 設定ID
+    /// </summary>
+    /// <param name="id"></param>
+    public void SetSelfID(string id)
+    {
+        playerManager.curPlayerID = id;
+    }
+
+    /// <summary>
+    /// 添加遊戲玩家
+    /// </summary>
+    /// <param name="parks"></param>
+    public void AddPlayer(List<PlayerPack> parks)
+    {
+        playerManager.AddPlayer(parks);
+    }
+
+    /// <summary>
+    /// 客戶端離開遊戲
+    /// </summary>
+    /// <param name="id"></param>
+    public void LeaveGame(string id)
+    {
+        playerManager.LeaveGame(id);
+    }
+
     private void OnDestroy()
     {
         clientManager.OnDestroy();
         requestManager.OnDestroy();
         uIManager.OnDestroy();
+        playerManager.OnDestroy();
     }
 }

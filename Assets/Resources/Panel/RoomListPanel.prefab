@@ -248,6 +248,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1301412411449884133}
   - component: {fileID: 5310207400896502209}
+  - component: {fileID: 5483619720864543497}
   - component: {fileID: 3490228528501544091}
   - component: {fileID: 4187434426806779894}
   - component: {fileID: 4971617514135168611}
@@ -298,9 +299,22 @@ MonoBehaviour:
   count_Sli: {fileID: 949826279205584649}
   roomListTransform: {fileID: 3717076302010582870}
   roomIten: {fileID: 3119044059781553154, guid: 0a47867406709234cbd023701e3664a1, type: 3}
+  logoutRequest: {fileID: 5483619720864543497}
   createRoomRequest: {fileID: 3490228528501544091}
   serchRoomRequest: {fileID: 4187434426806779894}
   joinRoomRequest: {fileID: 4971617514135168611}
+--- !u!114 &5483619720864543497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5393242513984005002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3eb555e8db6db84f88331da62794a53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3490228528501544091
 MonoBehaviour:
   m_ObjectHideFlags: 0

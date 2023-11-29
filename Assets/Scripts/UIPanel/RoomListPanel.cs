@@ -12,9 +12,10 @@ public class RoomListPanel : BasePanel
 
     public Transform roomListTransform;
     public GameObject roomIten;
+
+    public LogoutRequest logoutRequest;
     public CreateRoomRequest createRoomRequest;
     public SearchRoomRequest serchRoomRequest;
-
     public JoinRoomRequest joinRoomRequest;
 
     /// <summary>
@@ -81,7 +82,8 @@ public class RoomListPanel : BasePanel
     /// </summary>
     void OnLogoutClick()
     {
-        uiManager.ClosePanel();
+        logoutRequest.SendRequest();
+        uiManager.ClosePanel();        
     }
 
     /// <summary>

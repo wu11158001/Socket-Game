@@ -163,4 +163,14 @@ public class RoomPanel : BasePanel
                 break;
         }
     }
+
+    /// <summary>
+    /// 遊戲開始初始化
+    /// </summary>
+    /// <param name="packs"></param>
+    public void GameStartInit(List<PlayerPack> packs)
+    {
+        GamePanel gamePanel = uiManager.PushPanel(PanelType.Game).GetComponent<GamePanel>();
+        gamePanel.UpdateGameInfoList(packs);
+    }
 }

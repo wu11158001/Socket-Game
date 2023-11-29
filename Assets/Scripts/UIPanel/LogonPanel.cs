@@ -105,7 +105,7 @@ public class LogonPanel : BasePanel
                 uiManager.PushPanel(PanelType.Login);
                 break;
             case ReturnCode.Fail:
-                uiManager.ShowTip("註冊失敗");
+                uiManager.ShowTip("註冊失敗!已有相同帳號");
                 break;
         }
     }

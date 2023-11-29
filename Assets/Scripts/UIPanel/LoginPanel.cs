@@ -107,6 +107,9 @@ public class LoginPanel : BasePanel
             case ReturnCode.Fail:
                 uiManager.ShowTip("登入失敗");
                 break;
+            case ReturnCode.Duplicate:
+                uiManager.ShowTip("帳號已登入");
+                break;
         }
     }
 }

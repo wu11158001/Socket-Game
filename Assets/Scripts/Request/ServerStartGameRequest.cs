@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SocketGameProtobuf;
+using System.Linq;
 
 public class ServerStartGameRequest : BaseRequest
 {
-    private bool isStartGame = false;
+    private MainPack pack = null;
+    public RoomPanel roomPanel;
 
     public override void Awake()
     {
@@ -15,10 +17,13 @@ public class ServerStartGameRequest : BaseRequest
 
     private void Update()
     {
-        if(isStartGame)
+        if(pack != null)
         {
             Debug.Log("遊戲開始");
-            isStartGame = false;
+            
+            gameFace.AddPlayer(pack.PlayerPack.ToList());
+            roomPanel.GameStartInit(pack.PlayerPack.ToList());
+            pack = null;
         }
     }
 
@@ -28,6 +33,6 @@ public class ServerStartGameRequest : BaseRequest
     /// <param name="pack"></param>
     public override void OnResponse(MainPack pack)
     {
-        isStartGame = true;
+        this.pack = pack;
     }
 }

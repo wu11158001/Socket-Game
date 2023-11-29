@@ -45,6 +45,7 @@ public class UIManager : BaseManager
             "TipPanel",//提示面板
             "RoomListPanel",//房間列表面板
             "RoomPanel",//房間面板
+            "GamePanel",//遊戲面板
         };
 
         panelPathDic.Add(PanelType.Start, panelPath + panelName[0]);//開始面板
@@ -53,6 +54,7 @@ public class UIManager : BaseManager
         panelPathDic.Add(PanelType.Tip, panelPath + panelName[3]);//提示面板
         panelPathDic.Add(PanelType.RoomList, panelPath + panelName[4]);//房間列表面板
         panelPathDic.Add(PanelType.Room, panelPath + panelName[5]);//房間面板
+        panelPathDic.Add(PanelType.Game, panelPath + panelName[6]);//遊戲面板
     }
 
     /// <summary>
