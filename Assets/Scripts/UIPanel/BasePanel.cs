@@ -7,6 +7,8 @@ public class BasePanel : MonoBehaviour
     protected UIManager uiManager;
     public UIManager SetUIManager { set { uiManager = value; } }
 
+    protected GameFace gameFace { get { return GameFace.Instance; } }
+
     /// <summary>
     /// UI面板開始
     /// </summary>

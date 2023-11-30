@@ -20,24 +20,23 @@ public class PlayerManager : BaseManager
         character = Resources.Load<GameObject>("Prefab/Character");
     }
 
-    //玩家當前ID
-    public string curPlayerID { get; set; }
-
     /// <summary>
     /// 添加玩家
     /// </summary>
     /// <param name="pack"></param>
-    public void AddPlayer(List<PlayerPack> pack)
+    public void AddPlayer(MainPack pack)
     {
-        spawnPos = GameObject.Find("SpqwnPos").transform;
-        foreach (PlayerPack player in pack)
+        spawnPos = GameObject.Find("SpawnPos").transform;
+        foreach (PlayerPack player in pack.PlayerPack)
         {
+            Debug.Log("添加遊戲角色" + player.PlayerName);
             GameObject obj = GameObject.Instantiate(character, spawnPos.position, Quaternion.identity);
 
             //創建本地角色
-            if (player.PlayerName.Equals(curPlayerID))
+            if (player.PlayerName.Equals(gameFace.UserName))
             {
-                
+                obj.AddComponent<CharacterController>();
+                obj.transform.Find("Weapon").gameObject.AddComponent<WeaponController>();
             }
 
             //創建其他客戶端角色
@@ -49,17 +48,12 @@ public class PlayerManager : BaseManager
     /// <summary>
     /// 客戶端離開遊戲
     /// </summary>
-    /// <param name="id"></param>
-    public void LeaveGame(string id)
+    public void LeaveGame()
     {
-        if (playerDic.TryGetValue(id, out GameObject obj))
+        foreach (var c in playerDic.Values)
         {
-            GameObject.Destroy(obj);
-            playerDic.Remove(id);
+            GameObject.Destroy(c);
         }
-        else
-        {
-            Debug.LogError("移除角色出錯");
-        }
+        playerDic.Clear();
     }
 }

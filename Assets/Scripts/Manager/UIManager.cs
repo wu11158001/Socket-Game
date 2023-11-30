@@ -113,9 +113,9 @@ public class UIManager : BaseManager
     }
 
     /// <summary>
-    /// 關閉當前UI面板
+    /// 退回前個UI面板
     /// </summary>
-    public void ClosePanel()
+    public void PopPanel()
     {
         if (panelStack.Count == 0) return;
 

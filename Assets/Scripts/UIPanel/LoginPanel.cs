@@ -102,6 +102,7 @@ public class LoginPanel : BasePanel
         {
             case ReturnCode.Succeed:
                 uiManager.ShowTip("登入成功");
+                gameFace.UserName = acc_IF.text;
                 uiManager.PushPanel(PanelType.RoomList);
                 break;
             case ReturnCode.Fail:

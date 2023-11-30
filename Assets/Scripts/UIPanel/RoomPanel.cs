@@ -90,7 +90,7 @@ public class RoomPanel : BasePanel
     /// </summary>
     public void ExitRoomResponse()
     {
-        uiManager.ClosePanel();
+        uiManager.PopPanel();
     }
 
     /// <summary>
@@ -167,10 +167,10 @@ public class RoomPanel : BasePanel
     /// <summary>
     /// 遊戲開始初始化
     /// </summary>
-    /// <param name="packs"></param>
-    public void GameStartInit(List<PlayerPack> packs)
+    /// <param name="pack"></param>
+    public void GameStartInit(MainPack pack)
     {
         GamePanel gamePanel = uiManager.PushPanel(PanelType.Game).GetComponent<GamePanel>();
-        gamePanel.UpdateGameInfoList(packs);
+        gamePanel.UpdateGameInfoList(pack);
     }
 }

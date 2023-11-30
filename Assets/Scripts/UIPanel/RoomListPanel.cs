@@ -83,7 +83,7 @@ public class RoomListPanel : BasePanel
     void OnLogoutClick()
     {
         logoutRequest.SendRequest();
-        uiManager.ClosePanel();        
+        uiManager.PopPanel();        
     }
 
     /// <summary>

@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterContriller : MonoBehaviour
+public class CharacterController : MonoBehaviour
 {
     private Rigidbody2D r2d;
     private bool isFloor;
+
+    private float moveSpeed = 20;
+    private float jumpForce = 30;
 
     private void Start()
     {
@@ -27,7 +30,7 @@ public class CharacterContriller : MonoBehaviour
 
         if(h != 0)
         {
-            r2d.velocity = new Vector2(h * 10, r2d.velocity.y);
+            r2d.velocity = new Vector2(h * moveSpeed, r2d.velocity.y);
         }
     }
 
@@ -36,9 +39,9 @@ public class CharacterContriller : MonoBehaviour
     /// </summary>
     void Jump()
     {
-        if(Input.GetKeyDown(KeyCode.UpArrow) && isFloor == true)
+        if(Input.GetKeyDown(KeyCode.W) && isFloor == false)
         {
-            r2d.velocity = new Vector2(r2d.velocity.x, 15);
+            r2d.velocity = new Vector2(r2d.velocity.x, jumpForce);
         }
     }
 

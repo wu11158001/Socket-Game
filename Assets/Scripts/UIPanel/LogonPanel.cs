@@ -89,7 +89,7 @@ public class LogonPanel : BasePanel
     /// </summary>
     void OnSwitchLoginClick()
     {
-        uiManager.ClosePanel();
+        uiManager.PopPanel();
     }
 
     /// <summary>

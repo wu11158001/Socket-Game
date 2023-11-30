@@ -12,7 +12,7 @@ public class RoomExitRequest : BaseRequest
     public override void Awake()
     {
         requestCode = RequestCode.Room;
-        actionCode = ActionCode.Exit;
+        actionCode = ActionCode.ExitGame;
         base.Awake();
     }
 

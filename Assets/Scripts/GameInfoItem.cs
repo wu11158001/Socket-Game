@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameInfoList : MonoBehaviour
+public class GameInfoItem : MonoBehaviour
 {
     [SerializeField]
     private Text userName_Txt;

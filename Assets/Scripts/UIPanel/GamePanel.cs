@@ -6,14 +6,15 @@ using UnityEngine.UI;
 
 public class GamePanel : BasePanel
 {
-    public GameObject item;
+    public GameObject gameInfoItem;
     public Transform gameInfoListTransform;
     public Text time_Txt;
     public Button exitGame_Btn;
+    public GameExitRequest gameExitRequest;
 
     private float startTime;
 
-    private Dictionary<string, GameInfoList> infoDic = new Dictionary<string, GameInfoList>();
+    private Dictionary<string, GameInfoItem> infoDic = new Dictionary<string, GameInfoItem>();
 
     /// <summary>
     /// UI面板開始
@@ -84,22 +85,25 @@ public class GamePanel : BasePanel
     /// </summary>
     public void OnExitGameClick()
     {
-
+        gameExitRequest.SendRequest();
+        gameFace.LeaveGame();
+        uiManager.PopPanel();
+        uiManager.PopPanel();
     }
-    
+
     /// <summary>
     /// 更新玩家訊息列表
     /// </summary>
-    /// <param name="packs"></param>
-    public void UpdateGameInfoList(List<PlayerPack> packs)
+    /// <param name="pack"></param>
+    public void UpdateGameInfoList(MainPack pack)
     {
-        foreach (var player in packs)
+        foreach (var player in pack.PlayerPack)
         {
-            GameObject obj = Instantiate(item);
+            GameObject obj = Instantiate(gameInfoItem);
             obj.transform.SetParent(gameInfoListTransform);
-            GameInfoList gameInfoList = obj.GetComponent<GameInfoList>();
-            gameInfoList.SetInfo(player.PlayerName, player.HP);
-            infoDic.Add(player.PlayerID, gameInfoList);
+            GameInfoItem infoItem = obj.GetComponent<GameInfoItem>();
+            infoItem.SetInfo(player.PlayerName, player.HP);
+            infoDic.Add(player.PlayerName, infoItem);
         }
     }
 
@@ -110,9 +114,9 @@ public class GamePanel : BasePanel
     /// <param name="hp"></param>
     public void UpdateGameInfoValue(string id, int hp)
     {
-        if(infoDic.TryGetValue(id, out GameInfoList gameInfoList))
+        if(infoDic.TryGetValue(id, out GameInfoItem gameInfoItem))
         {
-            gameInfoList.UpdateValue(hp);
+            gameInfoItem.UpdateValue(hp);
         }
         else
         {
