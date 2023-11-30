@@ -35,12 +35,17 @@ public class PlayerManager : BaseManager
             //創建本地角色
             if (player.PlayerName.Equals(gameFace.UserName))
             {
+                obj.AddComponent<UpdatePosRequest>();
+                obj.AddComponent<UpdatePosition>();
                 obj.AddComponent<CharacterController>();
                 obj.transform.Find("Weapon").gameObject.AddComponent<WeaponController>();
             }
-
-            //創建其他客戶端角色
-
+            else
+            {
+                //創建其他客戶端角色
+                obj.GetComponent<Rigidbody2D>().simulated = false;
+            }
+            
             playerDic.Add(player.PlayerName, obj);
         }
     }
@@ -59,6 +64,23 @@ public class PlayerManager : BaseManager
         else
         {
             Debug.LogError("移除玩家出錯!!!");
+        }
+    }
+
+    /// <summary>
+    /// 更新角色位置
+    /// </summary>
+    /// <param name="pack"></param>
+    public void UpdatePos(MainPack pack)
+    {
+        PosPack posPack = pack.PlayerPack[0].PosPack;
+        if (playerDic.TryGetValue(pack.PlayerPack[0].PlayerName, out GameObject obj))
+        {
+            Vector2 pos = new Vector2(posPack.PosX, posPack.PosY);
+            obj.transform.position = pos;
+            obj.transform.eulerAngles = new Vector3(0, 0, posPack.CharacterRotZ);
+
+            obj.transform.Find("Weapon").eulerAngles = new Vector3(0, 0, posPack.WeaponRotZ);
         }
     }
 

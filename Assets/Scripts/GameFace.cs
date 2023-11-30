@@ -109,6 +109,15 @@ public class GameFace : MonoBehaviour
         uIManager.PopPanel();
     }
 
+    /// <summary>
+    /// 更新位置
+    /// </summary>
+    /// <param name="pack"></param>
+    public void UpdatePos(MainPack pack)
+    {
+        playerManager.UpdatePos(pack);
+    }
+
     private void OnDestroy()
     {
         clientManager.OnDestroy();
