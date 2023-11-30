@@ -21,7 +21,7 @@ public class PlayerManager : BaseManager
     }
 
     /// <summary>
-    /// 添加玩家
+    /// 添加遊戲玩家
     /// </summary>
     /// <param name="pack"></param>
     public void AddPlayer(MainPack pack)
@@ -42,6 +42,23 @@ public class PlayerManager : BaseManager
             //創建其他客戶端角色
 
             playerDic.Add(player.PlayerName, obj);
+        }
+    }
+
+    /// <summary>
+    /// 移除遊戲玩家
+    /// </summary>
+    /// <param name="name"></param>
+    public void RemovePlayer(string name)
+    {
+        if (playerDic.TryGetValue(name, out GameObject obj))
+        {
+            GameObject.Destroy(obj);
+            playerDic.Remove(name);
+        }
+        else
+        {
+            Debug.LogError("移除玩家出錯!!!");
         }
     }
 

@@ -3,38 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using SocketGameProtobuf;
 
-public class GameExitRequest : BaseRequest
+public class UpdateCharacterListRequest : BaseRequest
 {
     private MainPack pack = null;
+
+    public GamePanel gamePanel;
 
     public override void Awake()
     {
         requestCode = RequestCode.Game;
-        actionCode = ActionCode.ExitGame;
+        actionCode = ActionCode.UpdateCharacterList;
         base.Awake();
     }
 
     private void Update()
     {
-        if (pack != null)
+        if(pack != null)
         {
-            gameFace.LeaveGame();
+            gamePanel.UpdateGameInfoList(pack);
+            gameFace.RemovePlayer(pack.Str);
             pack = null;
         }
     }
 
     /// <summary>
-    /// 發送協議
+    /// 接收協議
     /// </summary>
-    public void SendRequest()
-    {
-        MainPack pack = new MainPack();
-        pack.RequestCode = requestCode;
-        pack.ActionCode = actionCode;
-        pack.Str = "GameExit";
-        base.SendRequest(pack);
-    }
-
+    /// <param name="pack"></param>
     public override void OnResponse(MainPack pack)
     {
         this.pack = pack;

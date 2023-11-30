@@ -91,11 +91,22 @@ public class GameFace : MonoBehaviour
     }
 
     /// <summary>
+    /// 移除遊戲玩家
+    /// </summary>
+    /// <param name="name"></param>
+    public void RemovePlayer(string name)
+    {
+        playerManager.RemovePlayer(name);
+    }
+
+    /// <summary>
     /// 客戶端離開遊戲
     /// </summary>
     public void LeaveGame()
     {
         playerManager.LeaveGame();
+        uIManager.PopPanel();
+        uIManager.PopPanel();
     }
 
     private void OnDestroy()

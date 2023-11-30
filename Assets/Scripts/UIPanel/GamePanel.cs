@@ -87,8 +87,6 @@ public class GamePanel : BasePanel
     {
         gameExitRequest.SendRequest();
         gameFace.LeaveGame();
-        uiManager.PopPanel();
-        uiManager.PopPanel();
     }
 
     /// <summary>
@@ -97,6 +95,14 @@ public class GamePanel : BasePanel
     /// <param name="pack"></param>
     public void UpdateGameInfoList(MainPack pack)
     {
+        //移除訊息項目
+        for (int i = 0; i < gameInfoListTransform.childCount; i++)
+        {
+            Destroy(gameInfoListTransform.GetChild(i).gameObject);
+        }
+        infoDic.Clear();
+
+        //添加訊息項目
         foreach (var player in pack.PlayerPack)
         {
             GameObject obj = Instantiate(gameInfoItem);
