@@ -10,11 +10,12 @@ public class WeaponController : MonoBehaviour
 
     private Camera cameraMain;
 
-    [SerializeField]
-    private float fireSpeed = 20;
+    private FireRequest fireRequest;
 
     private void Start()
     {
+        fireRequest = GetComponent<FireRequest>();
+
         cameraMain = Camera.main;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -58,12 +59,14 @@ public class WeaponController : MonoBehaviour
                 fireAngle = -fireAngle;
             }
 
+            float angle = fireAngle + 90;
+
             GameObject bullet = Instantiate(bulletObj, fireTransform.position, Quaternion.identity);
-            bullet.transform.eulerAngles = new Vector3(0, 0, fireAngle + 90);
-            Vector2 v2 = (mousePos - transform.position).normalized * fireSpeed;
+            bullet.transform.eulerAngles = new Vector3(0, 0, angle);
+            Vector2 v2 = (mousePos - fireTransform.position).normalized * 20;
             bullet.GetComponent<Rigidbody2D>().velocity = v2;
 
-            
+            fireRequest.SendRequest(fireTransform.position, angle, mousePos);
         }
     }
 }

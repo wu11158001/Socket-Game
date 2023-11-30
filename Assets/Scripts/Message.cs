@@ -25,13 +25,12 @@ public class Message
     {
         startIndex += len;
 
-        //訊息不完整
-        if (startIndex <= 4) return;
-
-        int count = BitConverter.ToInt32(buffer, 0);
-
         while (true)
         {
+            //訊息不完整
+            if (startIndex <= 4) return;
+
+            int count = BitConverter.ToInt32(buffer, 0);
             if (startIndex >= count + 4)
             {
                 MainPack pack = (MainPack)MainPack.Descriptor.Parser.ParseFrom(buffer, 4, count);

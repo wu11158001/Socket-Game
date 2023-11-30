@@ -118,6 +118,15 @@ public class GameFace : MonoBehaviour
         playerManager.UpdatePos(pack);
     }
 
+    /// <summary>
+    /// 產生子彈
+    /// </summary>
+    /// <param name="pack"></param>
+    public void SpawnBullet(MainPack pack)
+    {
+        playerManager.SpawnBullet(pack);
+    }
+
     private void OnDestroy()
     {
         clientManager.OnDestroy();

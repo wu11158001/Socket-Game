@@ -12,12 +12,14 @@ public class PlayerManager : BaseManager
 
     private GameObject character;//角色物件
     private Transform spawnPos;//出生點
+    private GameObject bulletObj;//子彈預制體
 
     public override void OnInit()
     {
         base.OnInit();
 
         character = Resources.Load<GameObject>("Prefab/Character");
+        bulletObj = Resources.Load<GameObject>("Prefab/Bullet");
     }
 
     /// <summary>
@@ -35,15 +37,19 @@ public class PlayerManager : BaseManager
             //創建本地角色
             if (player.PlayerName.Equals(gameFace.UserName))
             {
+                Rigidbody2D r2d = obj.AddComponent<Rigidbody2D>();
+                r2d.gravityScale = 10;
+                r2d.freezeRotation = true;
+
                 obj.AddComponent<UpdatePosRequest>();
                 obj.AddComponent<UpdatePosition>();
                 obj.AddComponent<CharacterController>();
+                obj.transform.Find("Weapon").gameObject.AddComponent<FireRequest>();
                 obj.transform.Find("Weapon").gameObject.AddComponent<WeaponController>();
             }
             else
             {
                 //創建其他客戶端角色
-                obj.GetComponent<Rigidbody2D>().simulated = false;
             }
             
             playerDic.Add(player.PlayerName, obj);
@@ -68,6 +74,18 @@ public class PlayerManager : BaseManager
     }
 
     /// <summary>
+    /// 客戶端離開遊戲
+    /// </summary>
+    public void LeaveGame()
+    {
+        foreach (var c in playerDic.Values)
+        {
+            GameObject.Destroy(c);
+        }
+        playerDic.Clear();
+    }
+
+    /// <summary>
     /// 更新角色位置
     /// </summary>
     /// <param name="pack"></param>
@@ -85,14 +103,18 @@ public class PlayerManager : BaseManager
     }
 
     /// <summary>
-    /// 客戶端離開遊戲
+    /// 產生子彈
     /// </summary>
-    public void LeaveGame()
+    /// <param name="pack"></param>
+    public void SpawnBullet(MainPack pack)
     {
-        foreach (var c in playerDic.Values)
-        {
-            GameObject.Destroy(c);
-        }
-        playerDic.Clear();
+        Vector3 pos = new Vector3(pack.BulletPack.PosX, pack.BulletPack.PosY, 0);
+        float rot = pack.BulletPack.RotZ;
+        Vector3 mousePos = new Vector3(pack.BulletPack.MousePosX, pack.BulletPack.MousePosY, 0);
+        Vector3 velocity = (mousePos - pos).normalized * 20;
+
+        GameObject obj = GameObject.Instantiate(bulletObj, pos, Quaternion.identity);
+        obj.transform.eulerAngles = new Vector3(0, 0, rot);
+        obj.GetComponent<Rigidbody2D>().velocity = velocity;
     }
 }
