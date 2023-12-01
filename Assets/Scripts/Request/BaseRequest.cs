@@ -41,15 +41,6 @@ public class BaseRequest : MonoBehaviour
         gameFace.Send(pack);
     }
 
-    /// <summary>
-    /// 發送請求UDP
-    /// </summary>
-    /// <param name="pack"></param>
-    public virtual void SendRequestUDP(MainPack pack)
-    {
-        gameFace.SendUDP(pack);
-    }
-
     public virtual void OnDestroy()
     {
         gameFace.RemoveRequest(actionCode);

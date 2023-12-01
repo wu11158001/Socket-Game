@@ -45,16 +45,6 @@ public class GameFace : MonoBehaviour
     }
 
     /// <summary>
-    /// 發送UDP
-    /// </summary>
-    /// <param name="pack"></param>
-    public void SendUDP(MainPack pack)
-    {
-        pack.User = UserName;
-        clientManager.SendUDP(pack);
-    }
-
-    /// <summary>
     /// 處理回覆
     /// </summary>
     /// <param name="pack"></param>
