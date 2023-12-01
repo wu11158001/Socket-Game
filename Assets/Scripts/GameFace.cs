@@ -36,12 +36,22 @@ public class GameFace : MonoBehaviour
     }
 
     /// <summary>
-    /// 發送
+    /// 發送TCP
     /// </summary>
     /// <param name="pack"></param>
     public void Send(MainPack pack)
     {
         clientManager.Send(pack);
+    }
+
+    /// <summary>
+    /// 發送UDP
+    /// </summary>
+    /// <param name="pack"></param>
+    public void SendUDP(MainPack pack)
+    {
+        pack.User = UserName;
+        clientManager.SendUDP(pack);
     }
 
     /// <summary>

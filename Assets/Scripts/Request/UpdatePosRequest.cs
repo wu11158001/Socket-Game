@@ -47,7 +47,7 @@ public class UpdatePosRequest : BaseRequest
         pack.RequestCode = requestCode;
         pack.ActionCode = actionCode;
 
-        base.SendRequest(pack);
+        base.SendRequestUDP(pack);
     }
 
     /// <summary>

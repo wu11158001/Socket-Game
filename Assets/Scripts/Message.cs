@@ -58,4 +58,14 @@ public class Message
 
         return head.Concat(data).ToArray();
     }
+
+    /// <summary>
+    /// 打包
+    /// </summary>
+    /// <param name="pack"></param>
+    /// <returns></returns>
+    public static byte[] PackDataUDP(MainPack pack)
+    {
+        return pack.ToByteArray();
+    }
 }

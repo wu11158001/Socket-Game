@@ -43,7 +43,7 @@ public class FireRequest : BaseRequest
         pack.RequestCode = requestCode;
         pack.ActionCode = actionCode;
 
-        base.SendRequest(pack);
+        base.SendRequestUDP(pack);
     }
 
     /// <summary>
