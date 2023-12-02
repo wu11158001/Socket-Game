@@ -8,10 +8,9 @@ public class PlayerManager : BaseManager
     public PlayerManager(GameFace gameFace) : base(gameFace) { }
 
     //存放玩家
-    private Dictionary<string, GameObject> playerDic = new Dictionary<string, GameObject>();
+    private Dictionary<string, UpdateCharacterState> playerDic = new Dictionary<string, UpdateCharacterState>();
 
     private GameObject character;//角色物件
-    private Transform spawnPos;//出生點
     private GameObject bulletObj;//子彈預制體
 
     public override void OnInit()
@@ -28,31 +27,30 @@ public class PlayerManager : BaseManager
     /// <param name="pack"></param>
     public void AddPlayer(MainPack pack)
     {
-        spawnPos = GameObject.Find("SpawnPos").transform;
+        Vector3 spawnPos = Vector3.zero;
         foreach (PlayerPack player in pack.PlayerPack)
         {
             Debug.Log("添加遊戲角色" + player.PlayerName);
-            GameObject obj = GameObject.Instantiate(character, spawnPos.position, Quaternion.identity);
+            GameObject obj = GameObject.Instantiate(character, spawnPos, Quaternion.identity);
 
             //創建本地角色
             if (player.PlayerName.Equals(gameFace.UserName))
-            {
+            {                
                 Rigidbody2D r2d = obj.AddComponent<Rigidbody2D>();
                 r2d.gravityScale = 10;
                 r2d.freezeRotation = true;
 
                 obj.AddComponent<UpdatePosRequest>();
-                obj.AddComponent<UpdatePosition>();
-                obj.AddComponent<CharacterController>();
-                obj.transform.Find("Weapon").gameObject.AddComponent<FireRequest>();
-                obj.transform.Find("Weapon").gameObject.AddComponent<WeaponController>();
+                obj.AddComponent<UpdateAinRequest>();
+                obj.AddComponent<RoleController>();
             }
             else
             {
                 //創建其他客戶端角色
             }
-            
-            playerDic.Add(player.PlayerName, obj);
+
+            UpdateCharacterState body = obj.AddComponent<UpdateCharacterState>();
+            playerDic.Add(player.PlayerName, body);
         }
     }
 
@@ -62,9 +60,9 @@ public class PlayerManager : BaseManager
     /// <param name="name"></param>
     public void RemovePlayer(string name)
     {
-        if (playerDic.TryGetValue(name, out GameObject obj))
+        if (playerDic.TryGetValue(name, out UpdateCharacterState obj))
         {
-            GameObject.Destroy(obj);
+            GameObject.Destroy(obj.gameObject);
             playerDic.Remove(name);
         }
         else
@@ -80,7 +78,7 @@ public class PlayerManager : BaseManager
     {
         foreach (var c in playerDic.Values)
         {
-            GameObject.Destroy(c);
+            GameObject.Destroy(c.gameObject);
         }
         playerDic.Clear();
     }
@@ -92,29 +90,26 @@ public class PlayerManager : BaseManager
     public void UpdatePos(MainPack pack)
     {
         PosPack posPack = pack.PlayerPack[0].PosPack;
-        if (playerDic.TryGetValue(pack.PlayerPack[0].PlayerName, out GameObject obj))
+        if (playerDic.TryGetValue(pack.PlayerPack[0].PlayerName, out UpdateCharacterState obj))
         {
             Vector2 pos = new Vector2(posPack.PosX, posPack.PosY);
-            obj.transform.position = pos;
-            obj.transform.eulerAngles = new Vector3(0, 0, posPack.CharacterRotZ);
-
-            obj.transform.Find("Weapon").eulerAngles = new Vector3(0, 0, posPack.WeaponRotZ);
+            obj.UpdatePos(pos);
         }
     }
 
     /// <summary>
-    /// 產生子彈
+    /// 更新角色動畫
     /// </summary>
     /// <param name="pack"></param>
-    public void SpawnBullet(MainPack pack)
+    public void UpdateAni(MainPack pack)
     {
-        Vector3 pos = new Vector3(pack.BulletPack.PosX, pack.BulletPack.PosY, 0);
-        float rot = pack.BulletPack.RotZ;
-        Vector3 mousePos = new Vector3(pack.BulletPack.MousePosX, pack.BulletPack.MousePosY, 0);
-        Vector3 velocity = (mousePos - pos).normalized * 20;
-
-        GameObject obj = GameObject.Instantiate(bulletObj, pos, Quaternion.identity);
-        obj.transform.eulerAngles = new Vector3(0, 0, rot);
-        obj.GetComponent<Rigidbody2D>().velocity = velocity;
+        StatePack statePack = pack.PlayerPack[0].StatePack;
+        if (playerDic.TryGetValue(pack.PlayerPack[0].PlayerName, out UpdateCharacterState obj))
+        {
+            string aniName = statePack.AnimationName;
+            bool isActive = statePack.IsActive;
+            bool dir = statePack.Direction;
+            obj.UpdateAni(aniName, isActive, dir);
+        }
     }
 }

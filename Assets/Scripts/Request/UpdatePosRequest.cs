@@ -24,12 +24,10 @@ public class UpdatePosRequest : BaseRequest
     }
 
     /// <summary>
-    /// 發送協議
+    /// 發送位置協議
     /// </summary>
     /// <param name="pos">位置</param>
-    /// <param name="characterRotZ">角色旋轉</param>
-    /// <param name="gunRotZ">武器旋轉</param>
-    public void SendRequest(Vector2 pos, float characterRotZ, float gunRotZ)
+    public void SendRequest(Vector2 pos)
     {
         MainPack pack = new MainPack();
         PosPack posPack = new PosPack();
@@ -37,8 +35,6 @@ public class UpdatePosRequest : BaseRequest
 
         posPack.PosX = pos.x;
         posPack.PosY = pos.y;
-        posPack.CharacterRotZ = characterRotZ;
-        posPack.WeaponRotZ = gunRotZ;
 
         playerPack.PlayerName = gameFace.UserName;
         playerPack.PosPack = posPack;

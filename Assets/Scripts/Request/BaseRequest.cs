@@ -33,7 +33,7 @@ public class BaseRequest : MonoBehaviour
     }
 
     /// <summary>
-    /// 發送請求TPC
+    /// 發送請求
     /// </summary>
     /// <param name="pack"></param>
     public virtual void SendRequest(MainPack pack)

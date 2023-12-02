@@ -13,7 +13,9 @@ public class GamePanel : BasePanel
     public GameExitRequest gameExitRequest;
 
     private float startTime;
+    private GameObject stage_obj;
 
+    //存放玩家訊息
     private Dictionary<string, GameInfoItem> infoDic = new Dictionary<string, GameInfoItem>();
 
     /// <summary>
@@ -57,6 +59,7 @@ public class GamePanel : BasePanel
     /// </summary>
     void Entter()
     {
+        if(stage_obj != null) stage_obj.SetActive(true);
         gameObject.SetActive(true);
     }
 
@@ -65,14 +68,17 @@ public class GamePanel : BasePanel
     /// </summary>
     void Exit()
     {
+        stage_obj.SetActive(false);
         gameObject.SetActive(false);
     }
 
     private void Start()
     {
-        startTime = Time.time;
-
         exitGame_Btn.onClick.AddListener(OnExitGameClick);
+
+        startTime = Time.time;
+        stage_obj = Instantiate(Resources.Load<GameObject>("Prefab/GameScene"));
+        
     }
 
     private void FixedUpdate()

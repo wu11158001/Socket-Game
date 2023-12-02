@@ -119,12 +119,12 @@ public class GameFace : MonoBehaviour
     }
 
     /// <summary>
-    /// 產生子彈
+    /// 更新動畫
     /// </summary>
     /// <param name="pack"></param>
-    public void SpawnBullet(MainPack pack)
+    public void UpdateAni(MainPack pack)
     {
-        playerManager.SpawnBullet(pack);
+        playerManager.UpdateAni(pack);
     }
 
     private void OnDestroy()
