@@ -33,23 +33,27 @@ public class PlayerManager : BaseManager
             Debug.Log("添加遊戲角色" + player.PlayerName);
             GameObject obj = GameObject.Instantiate(character, spawnPos, Quaternion.identity);
 
+            Rigidbody2D r2d = obj.AddComponent<Rigidbody2D>();
+            r2d.gravityScale = 10;
+            r2d.freezeRotation = true;
+
+            UpdateCharacterState body = obj.AddComponent<UpdateCharacterState>();
+
             //創建本地角色
             if (player.PlayerName.Equals(gameFace.UserName))
-            {                
-                Rigidbody2D r2d = obj.AddComponent<Rigidbody2D>();
-                r2d.gravityScale = 10;
-                r2d.freezeRotation = true;
-
+            {                                
                 obj.AddComponent<UpdatePosRequest>();
                 obj.AddComponent<UpdateAinRequest>();
                 obj.AddComponent<RoleController>();
             }
             else
             {
+                obj.transform.Find("Gem").gameObject.SetActive(false);
                 //創建其他客戶端角色
             }
 
-            UpdateCharacterState body = obj.AddComponent<UpdateCharacterState>();
+            
+
             playerDic.Add(player.PlayerName, body);
         }
     }
@@ -109,7 +113,7 @@ public class PlayerManager : BaseManager
             string aniName = statePack.AnimationName;
             bool isActive = statePack.IsActive;
             bool dir = statePack.Direction;
-            obj.UpdateAni(aniName, isActive, dir);
+            obj.UpdateAni(aniName, dir, isActive);
         }
     }
 }
