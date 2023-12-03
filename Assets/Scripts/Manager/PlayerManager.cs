@@ -11,14 +11,14 @@ public class PlayerManager : BaseManager
     private Dictionary<string, UpdateCharacterState> playerDic = new Dictionary<string, UpdateCharacterState>();
 
     private GameObject character;//角色物件
-    private GameObject bulletObj;//子彈預制體
+    private GameObject attackBox;//攻擊框
 
     public override void OnInit()
     {
         base.OnInit();
 
         character = Resources.Load<GameObject>("Prefab/Character");
-        bulletObj = Resources.Load<GameObject>("Prefab/Bullet");
+        attackBox = Resources.Load<GameObject>("Prefab/AttackBox");
     }
 
     /// <summary>
@@ -28,9 +28,10 @@ public class PlayerManager : BaseManager
     public void AddPlayer(MainPack pack)
     {
         Vector3 spawnPos = Vector3.zero;
+
         foreach (PlayerPack player in pack.PlayerPack)
         {
-            Debug.Log("添加遊戲角色" + player.PlayerName);
+            Debug.Log("添加遊戲角色:" + player.PlayerName);
             GameObject obj = GameObject.Instantiate(character, spawnPos, Quaternion.identity);
 
             Rigidbody2D r2d = obj.AddComponent<Rigidbody2D>();
@@ -41,10 +42,15 @@ public class PlayerManager : BaseManager
 
             //創建本地角色
             if (player.PlayerName.Equals(gameFace.UserName))
-            {                                
+            {
+                //添加攻擊框
+                GameObject aBox = GameObject.Instantiate(attackBox);
+                aBox.transform.SetParent(obj.transform);
+                aBox.name = "AttackBox";
+
                 obj.AddComponent<UpdatePosRequest>();
                 obj.AddComponent<UpdateAinRequest>();
-                obj.AddComponent<RoleController>();
+                obj.AddComponent<CharacterController>();
             }
             else
             {
@@ -52,7 +58,8 @@ public class PlayerManager : BaseManager
                 //創建其他客戶端角色
             }
 
-            
+            obj.name = player.PlayerName;
+            body.userName = player.PlayerName;
 
             playerDic.Add(player.PlayerName, body);
         }
@@ -107,13 +114,28 @@ public class PlayerManager : BaseManager
     /// <param name="pack"></param>
     public void UpdateAni(MainPack pack)
     {
-        StatePack statePack = pack.PlayerPack[0].StatePack;
+        AniPack aniPack = pack.PlayerPack[0].AniPack;
         if (playerDic.TryGetValue(pack.PlayerPack[0].PlayerName, out UpdateCharacterState obj))
         {
-            string aniName = statePack.AnimationName;
-            bool isActive = statePack.IsActive;
-            bool dir = statePack.Direction;
+            string aniName = aniPack.AnimationName;
+            bool isActive = aniPack.IsActive;
+            bool dir = aniPack.Direction;
             obj.UpdateAni(aniName, dir, isActive);
+        }
+    }
+
+    /// <summary>
+    /// 玩家攻擊
+    /// </summary>
+    /// <param name=""></param>
+    public void PlayerAttack(MainPack pack)
+    {
+        foreach (var player in pack.PlayerPack)
+        {
+            if (playerDic.TryGetValue(player.PlayerName, out UpdateCharacterState obj))
+            {
+                obj.Hurt();
+            }
         }
     }
 }

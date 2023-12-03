@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SocketGameProtobuf;
+using Google.Protobuf.Collections;
 
-public class UpdateAinRequest : BaseRequest
+public class AttackRequest : BaseRequest
 {
     private MainPack pack = null;
 
     public override void Awake()
     {
         requestCode = RequestCode.Game;
-        actionCode = ActionCode.UpdateAni;
+        actionCode = ActionCode.PlayerAttack;
         base.Awake();
     }
 
@@ -18,29 +19,25 @@ public class UpdateAinRequest : BaseRequest
     {
         if (pack != null)
         {
-            gameFace.UpdateAni(pack);
+            gameFace.PlayerAttack(pack);
             pack = null;
         }
     }
 
     /// <summary>
-    /// 發送動畫協議
+    /// 發送攻擊協議
     /// </summary>
-    /// <param name="aniName">動畫名稱</param>
-    /// <param name="dir">面相方向(true=右)</param>
-    /// <param name="isActive">動畫bool</param>
-    public void SendRequest(string aniName, bool dir, bool isActive)
+    /// <param name="hitList">被攻擊玩家</param>
+    public void SendRequest(List<string> hitList)
     {
         MainPack pack = new MainPack();
-        AniPack aniPack = new AniPack();
+        AttackPack attackPack = new AttackPack();
         PlayerPack playerPack = new PlayerPack();
 
-        aniPack.AnimationName = aniName;
-        aniPack.IsActive = isActive;
-        aniPack.Direction = dir;
+        attackPack.AttackNames.Add(hitList);
 
         playerPack.PlayerName = gameFace.UserName;
-        playerPack.AniPack = aniPack;
+        playerPack.AttackPack = attackPack;
 
         pack.PlayerPack.Add(playerPack);
         pack.RequestCode = requestCode;

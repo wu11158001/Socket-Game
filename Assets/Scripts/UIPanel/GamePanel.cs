@@ -78,7 +78,6 @@ public class GamePanel : BasePanel
 
         startTime = Time.time;
         stage_obj = Instantiate(Resources.Load<GameObject>("Prefab/GameScene"));
-        
     }
 
     private void FixedUpdate()
@@ -122,13 +121,13 @@ public class GamePanel : BasePanel
     /// <summary>
     /// 更新玩家訊息列表內容
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="userName"></param>
     /// <param name="hp"></param>
-    public void UpdateGameInfoValue(string id, int hp)
+    public void UpdateGameInfoValue(string userName, int hp)
     {
-        if(infoDic.TryGetValue(id, out GameInfoItem gameInfoItem))
+        if(infoDic.TryGetValue(userName, out GameInfoItem gameInfoItem))
         {
-            gameInfoItem.UpdateValue(hp);
+            gameInfoItem.UpdateHPValue(hp);
         }
         else
         {

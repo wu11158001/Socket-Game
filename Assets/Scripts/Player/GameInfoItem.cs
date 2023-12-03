@@ -22,10 +22,10 @@ public class GameInfoItem : MonoBehaviour
     }
 
     /// <summary>
-    /// 更新遊戲列表內容
+    /// 更新遊戲列表內容_HP
     /// </summary>
     /// <param name="hp"></param>
-    public void UpdateValue(int hp)
+    public void UpdateHPValue(int hp)
     {
         hp_Sli.value = hp;
     }

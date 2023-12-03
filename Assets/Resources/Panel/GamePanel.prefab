@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 1970727091183952044}
   - component: {fileID: 1881566848521420127}
   - component: {fileID: -5647000949346060380}
-  - component: {fileID: 5974882176756685472}
+  - component: {fileID: 3195870075715981029}
   m_Layer: 5
   m_Name: GamePanel
   m_TagString: Untagged
@@ -208,7 +208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f40f0e8736b1c6499c19762b8e10db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5974882176756685472
+--- !u!114 &3195870075715981029
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

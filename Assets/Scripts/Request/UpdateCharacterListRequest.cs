@@ -18,7 +18,7 @@ public class UpdateCharacterListRequest : BaseRequest
 
     private void Update()
     {
-        if(pack != null)
+        if (pack != null)
         {
             gamePanel.UpdateGameInfoList(pack);
             gameFace.RemovePlayer(pack.Str);

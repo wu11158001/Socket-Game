@@ -20,9 +20,10 @@ public class ServerStartGameRequest : BaseRequest
         if(pack != null)
         {
             Debug.Log("遊戲開始");
-            
-            gameFace.AddPlayer(pack);
+
             roomPanel.GameStartInit(pack);
+            gameFace.AddPlayer(pack);
+            
             pack = null;
         }
     }

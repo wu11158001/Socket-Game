@@ -127,6 +127,15 @@ public class GameFace : MonoBehaviour
         playerManager.UpdateAni(pack);
     }
 
+    /// <summary>
+    /// 玩家攻擊
+    /// </summary>
+    /// <param name="pack"></param>
+    public void PlayerAttack(MainPack pack)
+    {
+        playerManager.PlayerAttack(pack);
+    }
+
     private void OnDestroy()
     {
         clientManager.OnDestroy();

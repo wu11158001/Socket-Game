@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoleController : MonoBehaviour
+public class CharacterController : MonoBehaviour
 {
     private Animator animator;
     private SpriteRenderer body;
 
+    private AttackBox attackBox;
     private UpdateCharacterState updateCharacterState;
     private UpdatePosRequest updatePosRequest;
     private UpdateAinRequest updateAniRequest;
@@ -20,6 +21,7 @@ public class RoleController : MonoBehaviour
     {
         animator = transform.Find("Body").GetComponent<Animator>();
         body = transform.Find("Body").GetComponent<SpriteRenderer>();
+        attackBox = GetComponentInChildren<AttackBox>();
 
         updateCharacterState = GetComponent<UpdateCharacterState>();
         updatePosRequest = GetComponent<UpdatePosRequest>();
@@ -127,6 +129,14 @@ public class RoleController : MonoBehaviour
     {
         isAttack = false;
         SetAni("IsJumpAttack", body.flipX, false);
+    }
+
+    /// <summary>
+    /// 開啟攻擊框
+    /// </summary>
+    public void OpenAttackBox()
+    {
+        attackBox.OpenBox(body.flipX);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

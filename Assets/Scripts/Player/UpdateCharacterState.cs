@@ -10,6 +10,7 @@ public class UpdateCharacterState : MonoBehaviour
     private Rigidbody2D r2d;
     private BoxCollider2D box2d;
 
+    public string userName;
     private float initGravity;
 
     private void Start()
@@ -73,5 +74,13 @@ public class UpdateCharacterState : MonoBehaviour
     {
         r2d.gravityScale = initGravity;
         box2d.enabled = true;
+    }
+
+    /// <summary>
+    /// 受傷
+    /// </summary>
+    public void Hurt()
+    {
+        animator.SetTrigger("Hurt_Tr");
     }
 }

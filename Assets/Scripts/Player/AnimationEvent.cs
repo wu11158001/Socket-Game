@@ -6,7 +6,7 @@ public class AnimationEvent : MonoBehaviour
 {
     private Rigidbody2D r2d;
     private BoxCollider2D box2d;
-    private RoleController roleController;
+    private CharacterController characterController;
     private SpriteRenderer spriteRenderer;
 
     private float initGravity;
@@ -15,12 +15,11 @@ public class AnimationEvent : MonoBehaviour
     {
         r2d = transform.parent.GetComponent<Rigidbody2D>();
         box2d = GetComponent<BoxCollider2D>();
-        roleController = transform.parent.GetComponent<RoleController>();
+        characterController = transform.parent.GetComponent<CharacterController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         initGravity = r2d.gravityScale;
     }
-
 
     /// <summary>
     /// 跳躍
@@ -47,11 +46,11 @@ public class AnimationEvent : MonoBehaviour
     /// </summary>
     void StopDash()
     {
-        if (roleController)
+        if (characterController)
         {
             r2d.gravityScale = initGravity;
             box2d.enabled = true;
-            roleController.StopDash();
+            characterController.StopDash();
         }
     }
 
@@ -60,7 +59,7 @@ public class AnimationEvent : MonoBehaviour
     /// </summary>
     void StopAttack()
     {
-        if (roleController) roleController.StopAttack();
+        if (characterController) characterController.StopAttack();
     }
 
     /// <summary>
@@ -68,6 +67,17 @@ public class AnimationEvent : MonoBehaviour
     /// </summary>
     void StopJumpAttack()
     {
-        if (roleController) roleController.StopJumpAttack();
+        if (characterController) characterController.StopJumpAttack();
+    }
+
+    /// <summary>
+    /// 攻擊
+    /// </summary>
+    void OnAttack()
+    {
+        int forceDir = spriteRenderer.flipX ? 1 : -1;
+        r2d.velocity = new Vector2(5 * forceDir, 0);
+
+        if (characterController) characterController.OpenAttackBox();
     }
 }
