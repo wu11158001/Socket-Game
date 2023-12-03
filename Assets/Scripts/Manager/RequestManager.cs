@@ -38,7 +38,7 @@ public class RequestManager : BaseManager
         }
         else
         {
-            Debug.LogWarning("不能找到對應的處理");
+            Debug.LogWarning("不能找到對應的處理:" + pack.ActionCode);
         }
     }
 }

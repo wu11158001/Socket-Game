@@ -14,7 +14,7 @@ public class AnimationEvent : MonoBehaviour
     private void Start()
     {
         r2d = transform.parent.GetComponent<Rigidbody2D>();
-        box2d = GetComponent<BoxCollider2D>();
+        box2d = transform.parent.GetComponent<BoxCollider2D>();
         characterController = transform.parent.GetComponent<CharacterController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 

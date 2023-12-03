@@ -15,6 +15,10 @@ public class GamePanel : BasePanel
     private float startTime;
     private GameObject stage_obj;
 
+    public GameObject gameOver_Obj;
+    public Text result_Txt;
+    public Button confirm_Btn;
+
     //存放玩家訊息
     private Dictionary<string, GameInfoItem> infoDic = new Dictionary<string, GameInfoItem>();
 
@@ -78,6 +82,9 @@ public class GamePanel : BasePanel
 
         startTime = Time.time;
         stage_obj = Instantiate(Resources.Load<GameObject>("Prefab/GameScene"));
+
+        gameOver_Obj.SetActive(false);
+        confirm_Btn.onClick.AddListener(OnExitGameClick);
     }
 
     private void FixedUpdate()
@@ -133,5 +140,17 @@ public class GamePanel : BasePanel
         {
             Debug.LogError("獲取不到對應的角色訊息");
         }
+    }
+
+    /// <summary>
+    /// 設定遊戲結果
+    /// </summary>
+    /// <param name="pack"></param>
+    public void SetGameOverInfo(MainPack pack)
+    {
+        bool result = pack.ReturnCode == ReturnCode.Succeed ? true : false;
+
+        gameOver_Obj.SetActive(true);
+        result_Txt.text = result ? "獲勝!!!" : "死掉了...";
     }
 }

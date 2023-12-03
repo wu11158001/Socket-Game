@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SocketGameProtobuf;
 
-public class UpdateCharacterListRequest : BaseRequest
+public class GameResultRequest : BaseRequest
 {
     private MainPack pack = null;
 
@@ -12,7 +12,7 @@ public class UpdateCharacterListRequest : BaseRequest
     public override void Awake()
     {
         requestCode = RequestCode.Game;
-        actionCode = ActionCode.UpdateCharacterList;
+        actionCode = ActionCode.GameResult;
         base.Awake();
     }
 
@@ -20,9 +20,7 @@ public class UpdateCharacterListRequest : BaseRequest
     {
         if (pack != null)
         {
-            gamePanel.UpdateGameInfoList(pack);
-
-            if (pack.Str != "UpdateCharacterList") gameFace.RemovePlayer(pack.Str);
+            gamePanel.SetGameOverInfo(pack);
             pack = null;
         }
     }
