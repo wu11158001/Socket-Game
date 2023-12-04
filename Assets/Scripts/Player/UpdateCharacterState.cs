@@ -14,6 +14,8 @@ public class UpdateCharacterState : MonoBehaviour
     public string userName;
     private float initGravity;
 
+    private float limitPosX = 17;
+
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -27,22 +29,19 @@ public class UpdateCharacterState : MonoBehaviour
 
     private void Update()
     {
-        OnMove();
-    }
-
-    /// <summary>
-    /// 移動
-    /// </summary>
-    void OnMove()
-    {
-        if(!animator.GetBool("IsDash") && !animator.GetBool("IsAttack"))
+        //移動
+        if (!animator.GetBool("IsDash") && !animator.GetBool("IsAttack"))
         {
             if (animator.GetBool("IsRun"))
             {
                 int dir = body.flipX ? 1 : -1;
                 transform.position = new Vector3(transform.position.x + 10 * dir * Time.deltaTime, transform.position.y, transform.position.z);
             }
-        }        
+        }
+
+        //限制移動範圍
+        if (transform.position.x > limitPosX) transform.position = new Vector2(limitPosX, transform.position.y); 
+        else if(transform.position.x < -limitPosX) transform.position = new Vector2(-limitPosX, transform.position.y);
     }
 
     /// <summary>

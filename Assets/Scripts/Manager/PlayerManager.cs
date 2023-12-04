@@ -27,7 +27,9 @@ public class PlayerManager : BaseManager
     /// <param name="pack"></param>
     public void AddPlayer(MainPack pack)
     {
-        Vector3 spawnPos = Vector3.zero;
+        //產生位置
+        float posX = Random.Range(-10, 10);
+        Vector3 spawnPos = new Vector3(posX, -3, 0);
 
         foreach (PlayerPack player in pack.PlayerPack)
         {
