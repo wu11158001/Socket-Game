@@ -136,6 +136,15 @@ public class GameFace : MonoBehaviour
         playerManager.PlayerAttack(pack);
     }
 
+    /// <summary>
+    /// 遊戲結果
+    /// </summary>
+    /// <param name="pack"></param>
+    public void GameResult(MainPack pack)
+    {
+        playerManager.GameResult(pack);
+    }
+
     private void OnDestroy()
     {
         clientManager.OnDestroy();

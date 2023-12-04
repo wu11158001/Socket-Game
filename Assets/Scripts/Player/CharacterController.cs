@@ -16,6 +16,8 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private bool isFloor;
     [SerializeField] private bool isAttack;
     [SerializeField] private bool isDash;
+    [SerializeField] private bool isHurt;
+    [SerializeField] private bool isGameOver;
 
     private void Start()
     {
@@ -32,7 +34,10 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
-        InputContrl();
+        if (!isHurt && !isGameOver)
+        {
+            InputContrl();
+        }        
     }
 
     /// <summary>
@@ -137,6 +142,32 @@ public class CharacterController : MonoBehaviour
     public void OpenAttackBox()
     {
         attackBox.OpenBox(body.flipX);
+    }
+
+    /// <summary>
+    /// 受傷
+    /// </summary>
+    public void OnHurt()
+    {
+        isHurt = true;
+    }
+
+    /// <summary>
+    /// 受擊狀態結束
+    /// </summary>
+    public void HurtOver()
+    {
+        isHurt = false;
+    }
+
+    /// <summary>
+    /// 遊戲結束
+    /// </summary>
+    /// <param name="triggerName"></param>
+    public void GameOver(string triggerName)
+    {
+        isGameOver = true;
+        updateAniRequest.SendRequest(triggerName, body.flipX, true);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

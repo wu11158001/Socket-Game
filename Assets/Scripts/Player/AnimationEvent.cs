@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AnimationEvent : MonoBehaviour
 {
+    private Animator animator;
     private Rigidbody2D r2d;
     private BoxCollider2D box2d;
     private CharacterController characterController;
@@ -13,12 +14,22 @@ public class AnimationEvent : MonoBehaviour
 
     private void Start()
     {
+        animator = GetComponent<Animator>();
         r2d = transform.parent.GetComponent<Rigidbody2D>();
         box2d = transform.parent.GetComponent<BoxCollider2D>();
         characterController = transform.parent.GetComponent<CharacterController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         initGravity = r2d.gravityScale;
+    }
+
+    /// <summary>
+    /// 播放待機
+    /// </summary>
+    void PlayIdle()
+    {
+        animator.Play("Idle");
+        if (characterController) characterController.HurtOver();
     }
 
     /// <summary>

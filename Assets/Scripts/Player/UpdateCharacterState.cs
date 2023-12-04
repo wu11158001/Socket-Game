@@ -5,6 +5,7 @@ using SocketGameProtobuf;
 
 public class UpdateCharacterState : MonoBehaviour
 {
+    private CharacterController characterController;
     private SpriteRenderer body;
     private Animator animator;
     private Rigidbody2D r2d;
@@ -15,10 +16,11 @@ public class UpdateCharacterState : MonoBehaviour
 
     private void Start()
     {
+        characterController = GetComponent<CharacterController>();
         animator = transform.Find("Body").GetComponent<Animator>();
         body = transform.Find("Body").GetComponent<SpriteRenderer>();
         r2d = GetComponent<Rigidbody2D>();
-        box2d = transform.Find("Body").GetComponent<BoxCollider2D>();
+        box2d = GetComponent<BoxCollider2D>();
 
         initGravity = r2d.gravityScale;
     }
@@ -62,6 +64,13 @@ public class UpdateCharacterState : MonoBehaviour
     public void UpdateAni(string aniName, bool dir, bool isActive)
     {
         body.flipX = dir;
+
+        if (aniName == "Hurt_Tr" || aniName == "Die_Tr" || aniName == "Win_Tr")
+        {
+            animator.SetTrigger(aniName);
+            return;
+        }
+        
         animator.SetBool(aniName, isActive);
 
         if (aniName == "IsDash" && isActive == false) StopDash();
@@ -82,5 +91,17 @@ public class UpdateCharacterState : MonoBehaviour
     public void Hurt()
     {
         animator.SetTrigger("Hurt_Tr");
+        if (characterController) characterController.OnHurt();
+    }
+
+    /// <summary>
+    /// 遊戲結果
+    /// </summary>
+    /// <param name="result">是否獲勝</param>
+    public void GameOver(bool result)
+    {
+        string triggerName = result ? "Win_Tr" : "Die_Tr";
+        if (characterController) characterController.GameOver(triggerName);
+        animator.SetTrigger(triggerName);
     }
 }

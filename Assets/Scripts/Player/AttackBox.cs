@@ -60,8 +60,6 @@ public class AttackBox : MonoBehaviour
         {        
             string hit = hitCharacter.userName;
             hitList.Add(hit);
-
-            Debug.Log(self.userName + " 攻擊了 " + hit);
         }
     }
 }

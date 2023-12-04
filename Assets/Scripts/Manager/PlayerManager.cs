@@ -7,7 +7,7 @@ public class PlayerManager : BaseManager
 {
     public PlayerManager(GameFace gameFace) : base(gameFace) { }
 
-    //存放玩家
+    //存放房間玩家
     private Dictionary<string, UpdateCharacterState> playerDic = new Dictionary<string, UpdateCharacterState>();
 
     private GameObject character;//角色物件
@@ -135,6 +135,22 @@ public class PlayerManager : BaseManager
             if (playerDic.TryGetValue(player.PlayerName, out UpdateCharacterState obj))
             {
                 obj.Hurt();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 遊戲結果
+    /// </summary>
+    /// <param name=""></param>
+    public void GameResult(MainPack pack)
+    {
+        foreach (var player in pack.PlayerPack)
+        {
+            if (playerDic.TryGetValue(player.PlayerName, out UpdateCharacterState obj))
+            {
+                bool result = pack.ReturnCode == ReturnCode.Succeed ? true : false;
+                obj.GameOver(result);
             }
         }
     }

@@ -21,6 +21,7 @@ public class GameResultRequest : BaseRequest
         if (pack != null)
         {
             gamePanel.SetGameOverInfo(pack);
+            gameFace.GameResult(pack);
             pack = null;
         }
     }

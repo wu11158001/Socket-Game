@@ -65,6 +65,7 @@ public class GamePanel : BasePanel
     {
         if(stage_obj != null) stage_obj.SetActive(true);
         gameObject.SetActive(true);
+        gameOver_Obj.SetActive(false);
     }
 
     /// <summary>
@@ -83,7 +84,6 @@ public class GamePanel : BasePanel
         startTime = Time.time;
         stage_obj = Instantiate(Resources.Load<GameObject>("Prefab/GameScene"));
 
-        gameOver_Obj.SetActive(false);
         confirm_Btn.onClick.AddListener(OnExitGameClick);
     }
 
