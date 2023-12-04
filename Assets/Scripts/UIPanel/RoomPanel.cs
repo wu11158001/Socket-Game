@@ -8,6 +8,7 @@ public class RoomPanel : BasePanel
 {
     public Button leave_Btn, send_Btn, start_Btn;
     public InputField chat_IF;
+    public Text roomName_Txt;
     public Scrollbar chat_Sb;
     public Transform userList;
     public GameObject userItemObj;
@@ -59,6 +60,7 @@ public class RoomPanel : BasePanel
     /// </summary>
     void Entter()
     {
+        chat_Txt.text = "";
         gameObject.SetActive(true);
     }
 
@@ -107,6 +109,7 @@ public class RoomPanel : BasePanel
         chatRequest.SendRequest(chat_IF.text);
         chat_Txt.text += "自己:" + chat_IF.text + "\n";
         chat_IF.text = "";
+        chat_Sb.value = 0;
     }
 
     /// <summary>
@@ -116,6 +119,7 @@ public class RoomPanel : BasePanel
     public void ChatResponse(string str)
     {
         chat_Txt.text += str + "\n";
+        chat_Sb.value = 0;
     }
 
     /// <summary>
@@ -124,6 +128,8 @@ public class RoomPanel : BasePanel
     /// <param name="pack"></param>
     public void UpdatePlayList(MainPack pack)
     {
+        roomName_Txt.text = $"房間:{pack.RoomPack[0].RoomName}";
+
         //清空
         for (int i = 0; i < userList.childCount; i++)
         {

@@ -7,6 +7,8 @@ public class RoomItem : MonoBehaviour
 {
     public Button join_Btn;
     public Text roomName_Txt, count_Txt, state_Txt;
+
+    [HideInInspector] 
     public RoomListPanel roomListPanel;
 
     private void Start()
@@ -31,8 +33,8 @@ public class RoomItem : MonoBehaviour
     /// <param name="state">房間狀態</param>
     public void SetRoomInfo(string roomName, int currCount, int maxCount, int state)
     {
-        roomName_Txt.text = roomName;
-        count_Txt.text = currCount + "/" + maxCount;
+        roomName_Txt.text = $"房間:{roomName}";
+        count_Txt.text = currCount + " / " + maxCount;
         switch (state)
         {
             case 0:

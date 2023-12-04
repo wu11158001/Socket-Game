@@ -9,6 +9,7 @@ public class RoomListPanel : BasePanel
     public Button logout_Btn, serch_Btn, create_Btn;
     public InputField createName_IF;
     public Slider count_Sli;
+    public Text count_Txt;
 
     public Transform roomListTransform;
     public GameObject roomIten;
@@ -75,6 +76,7 @@ public class RoomListPanel : BasePanel
         logout_Btn.onClick.AddListener(OnLogoutClick);
         serch_Btn.onClick.AddListener(OnSearchClick);
         create_Btn.onClick.AddListener(OnCreateClick);
+        count_Sli.onValueChanged.AddListener((val => { count_Txt.text = $"{val}人"; }));
     }
 
     /// <summary>
@@ -99,12 +101,7 @@ public class RoomListPanel : BasePanel
     /// </summary>
     void OnCreateClick()
     {
-        if(createName_IF.text == "")
-        {
-            uiManager.ShowTip("房間名不可為空");
-            return;
-        }
-
+        if(createName_IF.text == "") createName_IF.text = gameFace.UserName;
         createRoomRequest.SendRequest(createName_IF.text, (int)count_Sli.value);
     }
 
@@ -136,13 +133,13 @@ public class RoomListPanel : BasePanel
         switch (pack.ReturnCode)
         {
             case ReturnCode.Succeed:
-                uiManager.ShowTip("查詢成功! 共有:" + pack.RoomPack.Count + "房間");
+                uiManager.ShowTip("刷新房間。共 " + pack.RoomPack.Count + " 間房間");
                 break;
             case ReturnCode.Fail:
                 uiManager.ShowTip("查詢出錯");
                 break;
             case ReturnCode.NotRoom:
-                uiManager.ShowTip("房間不存在");
+                uiManager.ShowTip("目前沒有房間");
                 break;
         }
 
@@ -189,9 +186,9 @@ public class RoomListPanel : BasePanel
         switch (pack.ReturnCode)
         {
             case ReturnCode.Succeed:
-                uiManager.ShowTip("加入房間成功");
                 RoomPanel roomPanel = uiManager.PushPanel(PanelType.Room).GetComponent<RoomPanel>();
                 roomPanel.UpdatePlayList(pack);
+                uiManager.ShowTip("加入房間成功");
                 break;
             case ReturnCode.Fail:
                 uiManager.ShowTip("加入房間失敗");

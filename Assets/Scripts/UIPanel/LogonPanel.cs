@@ -70,14 +70,21 @@ public class LogonPanel : BasePanel
     }
 
     /// <summary>
-    /// 按下登入
+    /// 按下註冊
     /// </summary>
     void OnLogonClick()
     {
         //防呆
         if (acc_IF.text == "" || psw_IF.text == "")
         {
-            Debug.LogWarning("帳號/密碼不能為空");
+            uiManager.ShowTip("帳號/密碼不能為空");
+            return;
+        }
+
+        //防呆
+        if (acc_IF.text[0] == '0' || psw_IF.text[0] == '0')
+        {
+            uiManager.ShowTip("帳號/密碼開頭不能為'0'");
             return;
         }
 
@@ -102,7 +109,11 @@ public class LogonPanel : BasePanel
         {
             case ReturnCode.Succeed:
                 uiManager.ShowTip("註冊成功");
-                uiManager.PushPanel(PanelType.Login);
+                LoginPanel loginPanel = uiManager.PushPanel(PanelType.Login).GetComponent<LoginPanel>();
+
+                //登入
+                loginPanel.OnLogin(acc_IF.text, psw_IF.text);
+
                 break;
             case ReturnCode.Fail:
                 uiManager.ShowTip("註冊失敗!已有相同帳號");

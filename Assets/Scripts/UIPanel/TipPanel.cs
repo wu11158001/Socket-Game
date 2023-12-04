@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class TipPanel : BasePanel
 {
+    public Image bg_Img;
     public Text tipText;
     string tip = null;
 
@@ -43,9 +44,11 @@ public class TipPanel : BasePanel
     void ShowText(string str)
     {
         tipText.text = str;
-        tipText.CrossFadeAlpha(1, 0.1f, false);
+        bg_Img.enabled = true;
+        tipText.CrossFadeAlpha(1, 0.05f, false);
+        transform.SetSiblingIndex(100);
 
-        Invoke("HodeTip", 1);
+        Invoke(nameof(HodeTip), 2.5f);
     }
 
     /// <summary>
@@ -53,6 +56,7 @@ public class TipPanel : BasePanel
     /// </summary>
     void HodeTip()
     {
-        tipText.CrossFadeAlpha(0, 0.1f, false);
+        tipText.CrossFadeAlpha(0, 0.05f, false);
+        bg_Img.enabled = false;
     }
 }
