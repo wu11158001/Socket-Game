@@ -14,6 +14,7 @@ public class UserItem : MonoBehaviour
     /// <param name="playerName">玩家名稱</param>
     public void SetPlayerInfo(string playerName)
     {
+        transform.localScale = Vector3.one;
         this.playerName.text = playerName;
     }
 }

@@ -77,6 +77,9 @@ public class RoomListPanel : BasePanel
         serch_Btn.onClick.AddListener(OnSearchClick);
         create_Btn.onClick.AddListener(OnCreateClick);
         count_Sli.onValueChanged.AddListener((val => { count_Txt.text = $"{val}人"; }));
+
+        //定時更新房間
+        InvokeRepeating(nameof(OnSearchClick), 1, 5);
     }
 
     /// <summary>
@@ -114,7 +117,7 @@ public class RoomListPanel : BasePanel
         switch (pack.ReturnCode)
         {
             case ReturnCode.Succeed:
-                uiManager.ShowTip("創建成功");
+                //uiManager.ShowTip("創建成功");
                 RoomPanel roomPanel = uiManager.PushPanel(PanelType.Room).GetComponent<RoomPanel>();
                 roomPanel.UpdatePlayList(pack);
                 break;
@@ -133,13 +136,13 @@ public class RoomListPanel : BasePanel
         switch (pack.ReturnCode)
         {
             case ReturnCode.Succeed:
-                uiManager.ShowTip("刷新房間。共 " + pack.RoomPack.Count + " 間房間");
+                //uiManager.ShowTip("刷新房間。共 " + pack.RoomPack.Count + " 間房間");
                 break;
             case ReturnCode.Fail:
                 uiManager.ShowTip("查詢出錯");
                 break;
             case ReturnCode.NotRoom:
-                uiManager.ShowTip("目前沒有房間");
+                //uiManager.ShowTip("目前沒有房間");
                 break;
         }
 
@@ -188,7 +191,7 @@ public class RoomListPanel : BasePanel
             case ReturnCode.Succeed:
                 RoomPanel roomPanel = uiManager.PushPanel(PanelType.Room).GetComponent<RoomPanel>();
                 roomPanel.UpdatePlayList(pack);
-                uiManager.ShowTip("加入房間成功");
+                //uiManager.ShowTip("加入房間成功");
                 break;
             case ReturnCode.Fail:
                 uiManager.ShowTip("加入房間失敗");

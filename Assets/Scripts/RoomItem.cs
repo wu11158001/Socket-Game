@@ -11,8 +11,11 @@ public class RoomItem : MonoBehaviour
     [HideInInspector] 
     public RoomListPanel roomListPanel;
 
+    private string roomName;
+
     private void Start()
     {
+        transform.localScale = Vector3.one;
         join_Btn.onClick.AddListener(OnJoinClick);
     }
 
@@ -21,7 +24,7 @@ public class RoomItem : MonoBehaviour
     /// </summary>
     void OnJoinClick()
     {
-        roomListPanel.JoinRoom(roomName_Txt.text);
+        roomListPanel.JoinRoom(roomName);
     }
 
     /// <summary>
@@ -33,6 +36,7 @@ public class RoomItem : MonoBehaviour
     /// <param name="state">房間狀態</param>
     public void SetRoomInfo(string roomName, int currCount, int maxCount, int state)
     {
+        this.roomName = roomName;
         roomName_Txt.text = $"房間:{roomName}";
         count_Txt.text = currCount + " / " + maxCount;
         switch (state)

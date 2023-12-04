@@ -9,6 +9,7 @@ public class PlayerManager : BaseManager
 
     //存放房間玩家
     private Dictionary<string, UpdateCharacterState> playerDic = new Dictionary<string, UpdateCharacterState>();
+    public Dictionary<string, UpdateCharacterState> GetPlayers { get { return playerDic; } }
 
     private GameObject character;//角色物件
     private GameObject attackBox;//攻擊框

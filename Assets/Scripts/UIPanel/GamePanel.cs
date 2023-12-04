@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class GamePanel : BasePanel
 {
+    private Camera camera;
     public GameObject gameInfoItem;
     public Transform gameInfoListTransform;
     public Text time_Txt;
@@ -21,6 +22,8 @@ public class GamePanel : BasePanel
 
     //存放玩家訊息
     private Dictionary<string, GameInfoItem> infoDic = new Dictionary<string, GameInfoItem>();
+    //存放玩家
+    private Dictionary<string, UpdateCharacterState> playerDic = new Dictionary<string, UpdateCharacterState>();
 
     /// <summary>
     /// UI面板開始
@@ -79,6 +82,7 @@ public class GamePanel : BasePanel
 
     private void Start()
     {
+        camera = Camera.main;
         exitGame_Btn.onClick.AddListener(OnExitGameClick);
 
         startTime = Time.time;
@@ -90,6 +94,22 @@ public class GamePanel : BasePanel
     private void FixedUpdate()
     {
         time_Txt.text = Mathf.Clamp((int)(Time.time - startTime), 0, 300).ToString();
+
+        //判斷其他玩家位置
+        foreach (var player in playerDic.Values)
+        {
+            Vector3 viewportPos = camera.WorldToViewportPoint(player.transform.position);
+            if (viewportPos.x > 0 && viewportPos.x < 1 && viewportPos.y > 0 && viewportPos.y < 1)
+            {
+                // 对象在摄像机视野内
+                Debug.Log("在视野内");
+            }
+            else
+            {
+                // 对象不在摄像机视野内
+                Debug.Log("不在视野内");
+            }
+        }
     }
 
     /// <summary>
@@ -112,7 +132,9 @@ public class GamePanel : BasePanel
         {
             Destroy(gameInfoListTransform.GetChild(i).gameObject);
         }
+
         infoDic.Clear();
+        playerDic = gameFace.GetPlayers();
 
         //添加訊息項目
         foreach (var player in pack.PlayerPack)

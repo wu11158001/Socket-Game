@@ -100,6 +100,15 @@ public class GameFace : MonoBehaviour
     }
 
     /// <summary>
+    /// 獲取遊戲玩家
+    /// </summary>
+    /// <returns></returns>
+    public Dictionary<string, UpdateCharacterState> GetPlayers()
+    {
+        return playerManager.GetPlayers;
+    }
+
+    /// <summary>
     /// 客戶端離開遊戲
     /// </summary>
     public void LeaveGame()
