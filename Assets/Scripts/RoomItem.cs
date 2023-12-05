@@ -30,13 +30,14 @@ public class RoomItem : MonoBehaviour
     /// <summary>
     /// 設定房間訊息
     /// </summary>
-    /// <param name="roomName">房間名</param>
     /// <param name="currCount">當前人數</param>
     /// <param name="maxCount">最大人數</param>
     /// <param name="state">房間狀態</param>
-    public void SetRoomInfo(string roomName, int currCount, int maxCount, int state)
+    /// <param name="roomName">房間名</param>
+    public void SetRoomInfo(int currCount, int maxCount, int state, string roomName)
     {
         this.roomName = roomName;
+
         roomName_Txt.text = $"房間:{roomName}";
         count_Txt.text = currCount + " / " + maxCount;
         switch (state)

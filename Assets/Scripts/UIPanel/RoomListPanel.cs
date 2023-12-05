@@ -6,8 +6,8 @@ using SocketGameProtobuf;
 
 public class RoomListPanel : BasePanel
 {
-    public Button logout_Btn, serch_Btn, create_Btn;
-    public InputField createName_IF;
+    public Button logout_Btn, serch_Btn, create_Btn, joinRoom_Btn;
+    public InputField createName_IF, joinRoom_IF;
     public Slider count_Sli;
     public Text count_Txt;
 
@@ -60,6 +60,8 @@ public class RoomListPanel : BasePanel
     /// </summary>
     void Entter()
     {
+        joinRoom_IF.text = "";
+        createName_IF.text = "";
         gameObject.SetActive(true);
     }
 
@@ -76,10 +78,11 @@ public class RoomListPanel : BasePanel
         logout_Btn.onClick.AddListener(OnLogoutClick);
         serch_Btn.onClick.AddListener(OnSearchClick);
         create_Btn.onClick.AddListener(OnCreateClick);
+        joinRoom_Btn.onClick.AddListener(delegate { JoinRoom(joinRoom_IF.text); });
         count_Sli.onValueChanged.AddListener((val => { count_Txt.text = $"{val}人"; }));
 
         //定時更新房間
-        InvokeRepeating(nameof(OnSearchClick), 1, 5);
+        InvokeRepeating(nameof(OnSearchClick), 0.1f, 5);
     }
 
     /// <summary>
@@ -167,7 +170,7 @@ public class RoomListPanel : BasePanel
             RoomItem item = Instantiate(roomIten, Vector3.zero, Quaternion.identity).GetComponent<RoomItem>();
             item.roomListPanel = this;
             item.transform.SetParent(roomListTransform);
-            item.SetRoomInfo(room.RoomName, room.CurrCount, room.MaxCount, room.State);
+            item.SetRoomInfo(room.CurrCount, room.MaxCount, room.State, room.RoomName);
         }
     }
 

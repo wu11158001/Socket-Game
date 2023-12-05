@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
-    private Camera camera;
+    private Camera mainCamera;
     private Animator animator;
     private SpriteRenderer body;
 
@@ -22,7 +22,7 @@ public class CharacterController : MonoBehaviour
 
     private void Start()
     {
-        camera = Camera.main;
+        mainCamera = Camera.main;
         animator = transform.Find("Body").GetComponent<Animator>();
         body = transform.Find("Body").GetComponent<SpriteRenderer>();
         attackBox = GetComponentInChildren<AttackBox>();
@@ -37,7 +37,7 @@ public class CharacterController : MonoBehaviour
     private void Update()
     {
         //攝影機跟隨
-        camera.transform.position = new Vector3(transform.position.x, camera.transform.position.y, camera.transform.position.z);
+        mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z);
 
         if (!isHurt && !isGameOver)
         {
