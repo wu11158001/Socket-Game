@@ -14,7 +14,10 @@ public class UpdateCharacterState : MonoBehaviour
     public string userName;
     private float initGravity;
 
-    private float limitPosX = 17;
+    private float limitPosX = 17;//移動限制範圍
+
+    private bool isActionable = true;//角色是否可行動
+    public bool GetActionable { get { return isActionable; } }
 
     private void Start()
     {
@@ -99,6 +102,8 @@ public class UpdateCharacterState : MonoBehaviour
     /// <param name="result">是否獲勝</param>
     public void GameOver(bool result)
     {
+        isActionable = false;
+
         string triggerName = result ? "Win_Tr" : "Die_Tr";
         if (characterController) characterController.GameOver(triggerName);
         animator.SetTrigger(triggerName);

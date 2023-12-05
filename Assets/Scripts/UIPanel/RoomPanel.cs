@@ -128,7 +128,10 @@ public class RoomPanel : BasePanel
     /// <param name="pack"></param>
     public void UpdatePlayList(MainPack pack)
     {
-        roomName_Txt.text = $"房間:{pack.RoomPack[0].RoomName}";
+        if (pack.RoomPack.Count > 0 && !string.IsNullOrEmpty(pack.RoomPack[0].RoomName))
+        {
+            roomName_Txt.text = $"房間:{pack.RoomPack[0].RoomName}";
+        }        
 
         //清空
         for (int i = 0; i < userList.childCount; i++)
@@ -137,11 +140,19 @@ public class RoomPanel : BasePanel
         }
 
         //添加
+        int index = 0;
         foreach (PlayerPack player in pack.PlayerPack)
         {
             UserItem userItem = Instantiate(userItemObj, Vector3.zero, Quaternion.identity).GetComponent<UserItem>();
             userItem.transform.SetParent(userList);
-            userItem.SetPlayerInfo(player.PlayerName);
+            userItem.SetPlayerInfo(player.PlayerName, index == 0, gameFace.UserName == player.PlayerName);
+
+            if (gameFace.UserName == player.PlayerName)
+            {
+                start_Btn.gameObject.SetActive(index == 0);
+                
+            }
+            index++;
         }
     }
 

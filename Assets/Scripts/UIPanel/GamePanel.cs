@@ -6,7 +6,11 @@ using UnityEngine.UI;
 
 public class GamePanel : BasePanel
 {
-    private Camera camera;
+    private Camera mainCamera;
+    private RectTransform canvasRect;
+    [SerializeField] private Transform posArrowTransform;
+    [SerializeField] private GameObject posArrow;
+
     public GameObject gameInfoItem;
     public Transform gameInfoListTransform;
     public Text time_Txt;
@@ -20,10 +24,12 @@ public class GamePanel : BasePanel
     public Text result_Txt;
     public Button confirm_Btn;
 
-    //存放玩家訊息
+    
+
+    //存放玩家訊息(名稱,訊息列表)
     private Dictionary<string, GameInfoItem> infoDic = new Dictionary<string, GameInfoItem>();
-    //存放玩家
-    private Dictionary<string, UpdateCharacterState> playerDic = new Dictionary<string, UpdateCharacterState>();
+    //存放玩家誤置箭頭(玩家狀態,箭頭物件)
+    private Dictionary<UpdateCharacterState, RectTransform> playerArrowDic = new Dictionary<UpdateCharacterState, RectTransform>();
 
     /// <summary>
     /// UI面板開始
@@ -82,12 +88,13 @@ public class GamePanel : BasePanel
 
     private void Start()
     {
-        camera = Camera.main;
-        exitGame_Btn.onClick.AddListener(OnExitGameClick);
+        mainCamera = Camera.main;
+        canvasRect = GameObject.Find("Canvas").GetComponent<RectTransform>();
 
         startTime = Time.time;
         stage_obj = Instantiate(Resources.Load<GameObject>("Prefab/GameScene"));
 
+        exitGame_Btn.onClick.AddListener(OnExitGameClick);
         confirm_Btn.onClick.AddListener(OnExitGameClick);
     }
 
@@ -96,19 +103,28 @@ public class GamePanel : BasePanel
         time_Txt.text = Mathf.Clamp((int)(Time.time - startTime), 0, 300).ToString();
 
         //判斷其他玩家位置
-        foreach (var player in playerDic.Values)
+        foreach (var arrow in playerArrowDic)
         {
-            Vector3 viewportPos = camera.WorldToViewportPoint(player.transform.position);
-            if (viewportPos.x > 0 && viewportPos.x < 1 && viewportPos.y > 0 && viewportPos.y < 1)
+            if (arrow.Key != null)
             {
-                // 对象在摄像机视野内
-                Debug.Log("在视野内");
-            }
-            else
-            {
-                // 对象不在摄像机视野内
-                Debug.Log("不在视野内");
-            }
+                Vector3 viewportPos = mainCamera.WorldToViewportPoint(arrow.Key.transform.position);
+                //判斷是否在視野內
+                if (viewportPos.x > 0 && viewportPos.x < 1)
+                {
+                    arrow.Value.gameObject.SetActive(false);
+                }
+                else
+                {
+                    arrow.Value.gameObject.SetActive(true);
+                    float dir = viewportPos.x < 0 ? -1 : 1;
+                    float posX = ((canvasRect.rect.width / 2) - 50) * dir;
+                    float posY = (canvasRect.rect.height * viewportPos.y) - (canvasRect.rect.height / 2);
+                    float rotY = viewportPos.x < 0 ? 180 : 0;
+
+                    arrow.Value.rotation = Quaternion.Euler(0, rotY, 0);
+                    arrow.Value.anchoredPosition = new Vector2(posX, posY);
+                }
+            }            
         }
     }
 
@@ -132,18 +148,28 @@ public class GamePanel : BasePanel
         {
             Destroy(gameInfoListTransform.GetChild(i).gameObject);
         }
-
         infoDic.Clear();
-        playerDic = gameFace.GetPlayers();
+        //移除位置箭頭物件
+        foreach (var arrow in playerArrowDic.Values)
+        {
+            Destroy(arrow.gameObject);
+        }
+        playerArrowDic.Clear();
 
-        //添加訊息項目
+        //添加
         foreach (var player in pack.PlayerPack)
         {
+            //添加訊息項目
             GameObject obj = Instantiate(gameInfoItem);
             obj.transform.SetParent(gameInfoListTransform);
             GameInfoItem infoItem = obj.GetComponent<GameInfoItem>();
             infoItem.SetInfo(player.PlayerName, player.HP);
             infoDic.Add(player.PlayerName, infoItem);
+
+            //添加位置箭頭物件
+            RectTransform arrow = Instantiate(posArrow).GetComponent<RectTransform>();
+            arrow.transform.SetParent(posArrowTransform);
+            playerArrowDic.Add(gameFace.GetPlayers()[player.PlayerName], arrow);
         }
     }
 

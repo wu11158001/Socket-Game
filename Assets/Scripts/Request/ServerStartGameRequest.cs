@@ -21,9 +21,9 @@ public class ServerStartGameRequest : BaseRequest
         {
             Debug.Log("遊戲開始");
 
-            roomPanel.GameStartInit(pack);
             gameFace.AddPlayer(pack);
-            
+            roomPanel.GameStartInit(pack);
+
             pack = null;
         }
     }
