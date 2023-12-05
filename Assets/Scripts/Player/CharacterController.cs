@@ -31,7 +31,7 @@ public class CharacterController : MonoBehaviour
         updatePosRequest = GetComponent<UpdatePosRequest>();
         updateAniRequest = GetComponent<UpdateAinRequest>();
 
-        InvokeRepeating(nameof(SendUpdatePosFun), 0.1f, 0.1f);
+        InvokeRepeating(nameof(SendUpdatePosFun), 0.2f, 0.1f);
     }
 
     private void Update()

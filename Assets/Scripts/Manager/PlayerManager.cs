@@ -49,6 +49,7 @@ public class PlayerManager : BaseManager
                 //添加攻擊框
                 GameObject aBox = GameObject.Instantiate(attackBox);
                 aBox.transform.SetParent(obj.transform);
+                aBox.transform.localPosition = Vector3.zero;
                 aBox.name = "AttackBox";
 
                 obj.AddComponent<UpdatePosRequest>();

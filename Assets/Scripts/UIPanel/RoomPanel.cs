@@ -8,7 +8,7 @@ public class RoomPanel : BasePanel
 {
     public Button leave_Btn, send_Btn, start_Btn;
     public InputField chat_IF;
-    public Text roomName_Txt;
+    public Text roomName_Txt, statr_Txt;
     public Scrollbar chat_Sb;
     public Transform userList;
     public GameObject userItemObj;
@@ -145,12 +145,12 @@ public class RoomPanel : BasePanel
         {
             UserItem userItem = Instantiate(userItemObj, Vector3.zero, Quaternion.identity).GetComponent<UserItem>();
             userItem.transform.SetParent(userList);
-            userItem.SetPlayerInfo(player.PlayerName, index == 0, gameFace.UserName == player.PlayerName);
+            userItem.SetPlayerInfo(player.PlayerName, player.TotalKill, index == 0, gameFace.UserName == player.PlayerName);
 
             if (gameFace.UserName == player.PlayerName)
             {
                 start_Btn.gameObject.SetActive(index == 0);
-                
+                start_Btn.enabled = index == 0;
             }
             index++;
         }
@@ -176,6 +176,8 @@ public class RoomPanel : BasePanel
                 uiManager.ShowTip("開始遊戲失敗");
                 break;
             case ReturnCode.Succeed:
+                start_Btn.enabled = false;
+                statr_Txt.text = chat_Txt.text;
                 uiManager.ShowTip("準備開始遊戲");
                 break;
         }

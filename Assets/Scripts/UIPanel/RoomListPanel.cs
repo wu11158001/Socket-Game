@@ -42,6 +42,9 @@ public class RoomListPanel : BasePanel
     /// </summary>
     public override void OnPause()
     {
+        //停止更新房間
+        CancelInvoke(nameof(OnSearchClick));
+
         base.OnPause();
         Exit();
     }
@@ -60,6 +63,9 @@ public class RoomListPanel : BasePanel
     /// </summary>
     void Entter()
     {
+        //定時更新房間
+        InvokeRepeating(nameof(OnSearchClick), 0.3f, 5);
+
         joinRoom_IF.text = "";
         createName_IF.text = "";
         gameObject.SetActive(true);
@@ -80,9 +86,6 @@ public class RoomListPanel : BasePanel
         create_Btn.onClick.AddListener(OnCreateClick);
         joinRoom_Btn.onClick.AddListener(delegate { JoinRoom(joinRoom_IF.text); });
         count_Sli.onValueChanged.AddListener((val => { count_Txt.text = $"{val}人"; }));
-
-        //定時更新房間
-        InvokeRepeating(nameof(OnSearchClick), 0.1f, 5);
     }
 
     /// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SocketGameProtobuf;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 public class GamePanel : BasePanel
 {
@@ -163,7 +164,7 @@ public class GamePanel : BasePanel
             GameObject obj = Instantiate(gameInfoItem);
             obj.transform.SetParent(gameInfoListTransform);
             GameInfoItem infoItem = obj.GetComponent<GameInfoItem>();
-            infoItem.SetInfo(player.PlayerName, player.HP);
+            infoItem.SetInfo(player.PlayerName, player.HP, player.TotalKill);
             infoDic.Add(player.PlayerName, infoItem);
 
             //添加位置箭頭物件
@@ -174,20 +175,25 @@ public class GamePanel : BasePanel
     }
 
     /// <summary>
-    /// 更新玩家訊息列表內容
+    /// 顯示擊殺訊息
     /// </summary>
-    /// <param name="userName"></param>
-    /// <param name="hp"></param>
-    public void UpdateGameInfoValue(string userName, int hp)
+    /// <param name="pack"></param>
+    async public void ShowKillInfo(MainPack pack)
     {
-        if(infoDic.TryGetValue(userName, out GameInfoItem gameInfoItem))
+        string attacker = pack.PlayerPack[0].KillInfoPack.Attacker;
+
+        //更新訊息表
+        if (infoDic.ContainsKey(attacker))
         {
-            gameInfoItem.UpdateHPValue(hp);
+            infoDic[attacker].AddKillCount();
         }
-        else
+
+        //顯示擊殺訊息       
+        foreach (var player in pack.PlayerPack[0].KillInfoPack.DeadList)
         {
-            Debug.LogError("獲取不到對應的角色訊息");
-        }
+            uiManager.ShowTip($"{attacker} 擊殺了 {player}");
+            await Task.Delay(3500);
+        }  
     }
 
     /// <summary>

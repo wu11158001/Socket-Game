@@ -6,27 +6,33 @@ using UnityEngine.UI;
 public class GameInfoItem : MonoBehaviour
 {
     [SerializeField]
-    private Text userName_Txt;
+    private Text userName_Txt, totalKill_Txt;
     [SerializeField]
     private Slider hp_Sli;
+
+    private int initKill;
 
     /// <summary>
     /// 設定訊息
     /// </summary>
     /// <param name="name"></param>
     /// <param name="hp"></param>
-    public void SetInfo(string name, int hp)
+    /// <param name="kills"></param>
+    public void SetInfo(string name, int hp, int kills)
     {
         userName_Txt.text = name;
+        totalKill_Txt.text = $"擊殺數:{kills}";
         hp_Sli.value = hp;
+
+        initKill = kills;
     }
 
     /// <summary>
-    /// 更新遊戲列表內容_HP
+    /// 擊殺數增加
     /// </summary>
-    /// <param name="hp"></param>
-    public void UpdateHPValue(int hp)
+    public void AddKillCount()
     {
-        hp_Sli.value = hp;
+        initKill++;
+        totalKill_Txt.text = $"擊殺數:{initKill}";
     }
 }

@@ -96,7 +96,6 @@ public class UIManager : BaseManager
         }
         else
         {
-
             //實例化UI
             BasePanel newPanel = SpawnPanel(panelType);
 
