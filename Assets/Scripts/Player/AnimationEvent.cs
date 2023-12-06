@@ -7,7 +7,7 @@ public class AnimationEvent : MonoBehaviour
     private Animator animator;
     private Rigidbody2D r2d;
     private BoxCollider2D box2d;
-    private CharacterController characterController;
+    private UserController userController;
     private SpriteRenderer spriteRenderer;
 
     private float initGravity;
@@ -17,7 +17,7 @@ public class AnimationEvent : MonoBehaviour
         animator = GetComponent<Animator>();
         r2d = transform.parent.GetComponent<Rigidbody2D>();
         box2d = transform.parent.GetComponent<BoxCollider2D>();
-        characterController = transform.parent.GetComponent<CharacterController>();
+        userController = transform.parent.GetComponent<UserController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         initGravity = r2d.gravityScale;
@@ -28,8 +28,8 @@ public class AnimationEvent : MonoBehaviour
     /// </summary>
     void PlayIdle()
     {
-        animator.Play("Idle");
-        if (characterController) characterController.HurtOver();
+        animator.Play(AnimatorHash.IsIdle);
+        if (userController) userController.HurtOver();
     }
 
     /// <summary>
@@ -49,7 +49,7 @@ public class AnimationEvent : MonoBehaviour
         box2d.enabled = false;
 
         int forceDir = spriteRenderer.flipX ? 1 : -1;
-        r2d.velocity = new Vector2(11 * forceDir, 0);
+        r2d.velocity = new Vector2(13 * forceDir, 0);
     }
 
     /// <summary>
@@ -57,11 +57,12 @@ public class AnimationEvent : MonoBehaviour
     /// </summary>
     void StopDash()
     {
-        if (characterController)
+        animator.SetBool(AnimatorHash.IsDash, false);
+        if (userController)
         {
             r2d.gravityScale = initGravity;
             box2d.enabled = true;
-            characterController.StopDash();
+            userController.StopDash();
         }
     }
 
@@ -70,7 +71,8 @@ public class AnimationEvent : MonoBehaviour
     /// </summary>
     void StopAttack()
     {
-        if (characterController) characterController.StopAttack();
+        animator.SetBool(AnimatorHash.IsAttack, false);
+        if (userController) userController.StopAttack();
     }
 
     /// <summary>
@@ -78,7 +80,8 @@ public class AnimationEvent : MonoBehaviour
     /// </summary>
     void StopJumpAttack()
     {
-        if (characterController) characterController.StopJumpAttack();
+        animator.SetBool(AnimatorHash.IsJumpAttack, false);
+        if (userController) userController.StopJumpAttack();
     }
 
     /// <summary>
@@ -89,6 +92,6 @@ public class AnimationEvent : MonoBehaviour
         int forceDir = spriteRenderer.flipX ? 1 : -1;
         r2d.velocity = new Vector2(5 * forceDir, 0);
 
-        if (characterController) characterController.OpenAttackBox();
+        if (userController) userController.OpenAttackBox();
     }
 }

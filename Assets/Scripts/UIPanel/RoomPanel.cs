@@ -15,8 +15,9 @@ public class RoomPanel : BasePanel
     public RoomExitRequest roomExitRequest;
 
     public Text chat_Txt;
-    public ChatRequest chatRequest;
 
+    public ChatRequest chatRequest;
+    public UpdateRoomUserInfoRequest updateRoomUserInfoRequest;
     public StartGameRequest startGameRequest;
 
     /// <summary>
@@ -145,7 +146,7 @@ public class RoomPanel : BasePanel
         {
             UserItem userItem = Instantiate(userItemObj, Vector3.zero, Quaternion.identity).GetComponent<UserItem>();
             userItem.transform.SetParent(userList);
-            userItem.SetPlayerInfo(player.PlayerName, player.TotalKill, index == 0, gameFace.UserName == player.PlayerName);
+            userItem.SetPlayerInfo(player.PlayerName, player.TotalKill, player.SelectCharacter, index == 0, gameFace.UserName == player.PlayerName);
 
             if (gameFace.UserName == player.PlayerName)
             {
@@ -154,6 +155,15 @@ public class RoomPanel : BasePanel
             }
             index++;
         }
+    }
+
+    /// <summary>
+    /// 更換角色
+    /// </summary>
+    /// <param name="index"></param>
+    public void ChangeCharacter(int index)
+    {
+        updateRoomUserInfoRequest.SendRequest(index);
     }
 
     /// <summary>
@@ -177,7 +187,6 @@ public class RoomPanel : BasePanel
                 break;
             case ReturnCode.Succeed:
                 start_Btn.enabled = false;
-                statr_Txt.text = chat_Txt.text;
                 uiManager.ShowTip("準備開始遊戲");
                 break;
         }

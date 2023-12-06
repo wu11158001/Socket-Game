@@ -5,7 +5,7 @@ using SocketGameProtobuf;
 
 public class UpdateCharacterState : MonoBehaviour
 {
-    private CharacterController characterController;
+    private UserController userController;
     private SpriteRenderer body;
     private Animator animator;
     private Rigidbody2D r2d;
@@ -21,7 +21,7 @@ public class UpdateCharacterState : MonoBehaviour
 
     private void Start()
     {
-        characterController = GetComponent<CharacterController>();
+        userController = GetComponent<UserController>();
         animator = transform.Find("Body").GetComponent<Animator>();
         body = transform.Find("Body").GetComponent<SpriteRenderer>();
         r2d = GetComponent<Rigidbody2D>();
@@ -33,9 +33,9 @@ public class UpdateCharacterState : MonoBehaviour
     private void Update()
     {
         //移動
-        if (!animator.GetBool("IsDash") && !animator.GetBool("IsAttack"))
+        if (!animator.GetBool(AnimatorHash.IsDash) && !animator.GetBool(AnimatorHash.IsAttack))
         {
-            if (animator.GetBool("IsRun"))
+            if (animator.GetBool(AnimatorHash.IsRun))
             {
                 int dir = body.flipX ? 1 : -1;
                 transform.position = new Vector3(transform.position.x + 10 * dir * Time.deltaTime, transform.position.y, transform.position.z);
@@ -92,8 +92,8 @@ public class UpdateCharacterState : MonoBehaviour
     /// </summary>
     public void Hurt()
     {
-        animator.SetTrigger("Hurt_Tr");
-        if (characterController) characterController.OnHurt();
+        animator.SetTrigger(AnimatorHash.Hurt_Tr);
+        if (userController) userController.OnHurt();
     }
 
     /// <summary>
@@ -105,7 +105,7 @@ public class UpdateCharacterState : MonoBehaviour
         isActionable = false;
 
         string triggerName = result ? "Win_Tr" : "Die_Tr";
-        if (characterController) characterController.GameOver(triggerName);
+        if (userController) userController.GameOver(triggerName);
         animator.SetTrigger(triggerName);
     }
 }

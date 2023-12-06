@@ -11,6 +11,8 @@ public class GamePanel : BasePanel
     private RectTransform canvasRect;
     [SerializeField] private Transform posArrowTransform;
     [SerializeField] private GameObject posArrow;
+    [SerializeField] private Transform headInfoTransform;
+    [SerializeField] private GameObject headInfo;
 
     public GameObject gameInfoItem;
     public Transform gameInfoListTransform;
@@ -27,10 +29,12 @@ public class GamePanel : BasePanel
 
     
 
-    //存放玩家訊息(名稱,訊息列表)
+    //存放玩家訊息(玩家名稱,訊息列表)
     private Dictionary<string, GameInfoItem> infoDic = new Dictionary<string, GameInfoItem>();
-    //存放玩家誤置箭頭(玩家狀態,箭頭物件)
+    //存放玩家位置箭頭(玩家狀態,箭頭物件)
     private Dictionary<UpdateCharacterState, RectTransform> playerArrowDic = new Dictionary<UpdateCharacterState, RectTransform>();
+    //存放玩家頭頂訊息(玩家名稱,頭頂物件)
+    private Dictionary<UpdateCharacterState, RectTransform> headInfoDic = new Dictionary<UpdateCharacterState, RectTransform>();
 
     /// <summary>
     /// UI面板開始
@@ -103,27 +107,40 @@ public class GamePanel : BasePanel
     {
         time_Txt.text = Mathf.Clamp((int)(Time.time - startTime), 0, 300).ToString();
 
-        //判斷其他玩家位置
         foreach (var arrow in playerArrowDic)
         {
             if (arrow.Key != null)
             {
                 Vector3 viewportPos = mainCamera.WorldToViewportPoint(arrow.Key.transform.position);
+
                 //判斷是否在視野內
-                if (viewportPos.x > 0 && viewportPos.x < 1)
+                if ((viewportPos.x > 0 && viewportPos.x < 1) || !arrow.Key.GetActionable)
                 {
                     arrow.Value.gameObject.SetActive(false);
+                    if(headInfoDic.TryGetValue(arrow.Key, out RectTransform rt))
+                    {
+                        rt.gameObject.SetActive(false);
+                    }
                 }
                 else
                 {
+                    //位置箭頭物件
                     arrow.Value.gameObject.SetActive(true);
                     float dir = viewportPos.x < 0 ? -1 : 1;
-                    float posX = ((canvasRect.rect.width / 2) - 50) * dir;
-                    float posY = (canvasRect.rect.height * viewportPos.y) - (canvasRect.rect.height / 2);
-                    float rotY = viewportPos.x < 0 ? 180 : 0;
+                    float arrowPosX = ((canvasRect.rect.width / 2) - 50) * dir;
+                    float arrowPosY = (canvasRect.rect.height * viewportPos.y) - (canvasRect.rect.height / 2);
+                    float arrowRotZ = viewportPos.x < 0 ? 180 : 0;
+                    arrow.Value.rotation = Quaternion.Euler(0, 0, arrowRotZ);
+                    arrow.Value.anchoredPosition = new Vector2(arrowPosX, arrowPosY);
 
-                    arrow.Value.rotation = Quaternion.Euler(0, rotY, 0);
-                    arrow.Value.anchoredPosition = new Vector2(posX, posY);
+                    //頭頂訊息物件
+                    if (headInfoDic.TryGetValue(arrow.Key, out RectTransform rt))
+                    {
+                        rt.gameObject.SetActive(true);
+                        float headInfoPosX = (canvasRect.rect.width * viewportPos.x) - (canvasRect.rect.width / 2);
+                        float headInfoPosY = (canvasRect.rect.height / 2 * viewportPos.y);
+                        rt.anchoredPosition = new Vector2(headInfoPosX, headInfoPosY);
+                    }              
                 }
             }            
         }
@@ -161,16 +178,26 @@ public class GamePanel : BasePanel
         foreach (var player in pack.PlayerPack)
         {
             //添加訊息項目
-            GameObject obj = Instantiate(gameInfoItem);
-            obj.transform.SetParent(gameInfoListTransform);
-            GameInfoItem infoItem = obj.GetComponent<GameInfoItem>();
+            GameObject infoItemObj = Instantiate(gameInfoItem);
+            infoItemObj.transform.SetParent(gameInfoListTransform);
+            infoItemObj.name = $"{player.PlayerName}_InfoItem";
+            GameInfoItem infoItem = infoItemObj.GetComponent<GameInfoItem>();
             infoItem.SetInfo(player.PlayerName, player.HP, player.TotalKill);
             infoDic.Add(player.PlayerName, infoItem);
 
             //添加位置箭頭物件
-            RectTransform arrow = Instantiate(posArrow).GetComponent<RectTransform>();
-            arrow.transform.SetParent(posArrowTransform);
-            playerArrowDic.Add(gameFace.GetPlayers()[player.PlayerName], arrow);
+            RectTransform arrowObj = Instantiate(posArrow).GetComponent<RectTransform>();
+            arrowObj.transform.SetParent(posArrowTransform);
+            arrowObj.name = $"{player.PlayerName}_Arrow";
+            playerArrowDic.Add(gameFace.GetPlayers()[player.PlayerName], arrowObj);
+
+            //添加頭頂訊息
+            RectTransform headInfoObj = Instantiate(headInfo).GetComponent<RectTransform>();
+            headInfoObj.transform.SetParent(headInfoTransform);
+            headInfoObj.name = $"{player.PlayerName}_HeadInfo";
+            Image healthBar = headInfoObj.transform.Find("HealthBar_Img").GetComponent<Image>();
+            healthBar.fillAmount = player.HP / player.MaxHp;
+            headInfoDic.Add(gameFace.GetPlayers()[player.PlayerName], headInfoObj);
         }
     }
 

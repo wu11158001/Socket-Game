@@ -11,15 +11,17 @@ public class PlayerManager : BaseManager
     private Dictionary<string, UpdateCharacterState> playerDic = new Dictionary<string, UpdateCharacterState>();
     public Dictionary<string, UpdateCharacterState> GetPlayers { get { return playerDic; } }
 
-    private GameObject character;//角色物件
+    private GameObject[] characters;//角色物件
     private GameObject attackBox;//攻擊框
+    private GameObject gem;//本地玩家標記
 
     public override void OnInit()
     {
         base.OnInit();
 
-        character = Resources.Load<GameObject>("Prefab/Character");
+        characters = Resources.LoadAll<GameObject>("Prefab/Characters");
         attackBox = Resources.Load<GameObject>("Prefab/AttackBox");
+        gem = Resources.Load<GameObject>("Prefab/Gem");
     }
 
     /// <summary>
@@ -35,7 +37,7 @@ public class PlayerManager : BaseManager
         foreach (PlayerPack player in pack.PlayerPack)
         {
             Debug.Log("添加遊戲角色:" + player.PlayerName);
-            GameObject obj = GameObject.Instantiate(character, spawnPos, Quaternion.identity);
+            GameObject obj = GameObject.Instantiate(characters[player.SelectCharacter], spawnPos, Quaternion.identity);
 
             Rigidbody2D r2d = obj.AddComponent<Rigidbody2D>();
             r2d.gravityScale = 10;
@@ -46,19 +48,24 @@ public class PlayerManager : BaseManager
             //創建本地角色
             if (player.PlayerName.Equals(gameFace.UserName))
             {
+                //標記
+                GameObject gemObj = GameObject.Instantiate(gem);
+                gemObj.transform.SetParent(obj.transform);
+                gemObj.transform.localPosition = new Vector3(0, 0.78f, 0);
+                gemObj.name = "Gem";
+
                 //添加攻擊框
-                GameObject aBox = GameObject.Instantiate(attackBox);
-                aBox.transform.SetParent(obj.transform);
-                aBox.transform.localPosition = Vector3.zero;
-                aBox.name = "AttackBox";
+                GameObject attackBoxObj = GameObject.Instantiate(attackBox);
+                attackBoxObj.transform.SetParent(obj.transform);
+                attackBoxObj.transform.localPosition = Vector3.zero;
+                attackBoxObj.name = "AttackBox";
 
                 obj.AddComponent<UpdatePosRequest>();
                 obj.AddComponent<UpdateAinRequest>();
-                obj.AddComponent<CharacterController>();
+                obj.AddComponent<UserController>();
             }
             else
             {
-                obj.transform.Find("Gem").gameObject.SetActive(false);
                 //創建其他客戶端角色
             }
 
