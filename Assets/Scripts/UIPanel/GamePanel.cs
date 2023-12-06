@@ -4,6 +4,8 @@ using UnityEngine;
 using SocketGameProtobuf;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using System;
+using System.Threading;
 
 public class GamePanel : BasePanel
 {
@@ -16,16 +18,17 @@ public class GamePanel : BasePanel
 
     public GameObject gameInfoItem;
     public Transform gameInfoListTransform;
-    public Text time_Txt;
     public Button exitGame_Btn;
     public GameExitRequest gameExitRequest;
 
-    private float startTime;
     private GameObject stage_obj;
 
     public GameObject gameOver_Obj;
     public Text result_Txt;
-    public Button confirm_Btn;    
+    public Button confirm_Btn;
+
+    [SerializeField] private GameObject manualObj;
+    [SerializeField] private Image manualBg_Img;
 
     //存放玩家訊息(玩家名稱,訊息列表)
     private Dictionary<string, GameInfoItem> infoDic = new Dictionary<string, GameInfoItem>();
@@ -78,6 +81,8 @@ public class GamePanel : BasePanel
         if(stage_obj != null) stage_obj.SetActive(true);
         gameObject.SetActive(true);
         gameOver_Obj.SetActive(false);
+
+        StartCoroutine(nameof(IStartDountDound));
     }
 
     /// <summary>
@@ -93,8 +98,6 @@ public class GamePanel : BasePanel
     {
         mainCamera = Camera.main;
         canvasRect = GameObject.Find("Canvas").GetComponent<RectTransform>();
-
-        startTime = Time.time;
         stage_obj = Instantiate(Resources.Load<GameObject>("Prefab/GameScene"));
 
         exitGame_Btn.onClick.AddListener(OnExitGameClick);
@@ -103,8 +106,6 @@ public class GamePanel : BasePanel
 
     private void Update()
     {
-        time_Txt.text = Mathf.Clamp((int)(Time.time - startTime), 0, 300).ToString();
-
         foreach (var arrow in playerArrowDic)
         {
             if (arrow.Key != null)
@@ -145,6 +146,26 @@ public class GamePanel : BasePanel
                 }
             }            
         }
+    }
+
+    /// <summary>
+    /// 開場畫面倒數
+    /// </summary>
+    IEnumerator IStartDountDound()
+    {
+        exitGame_Btn.gameObject.SetActive(false);
+        manualObj.SetActive(true);
+
+        Color color = new Color(0, 0, 0, 1);
+        while (color.a > 0)
+        {
+            color.a -= 0.3f * Time.deltaTime;
+            manualBg_Img.color = color;
+            yield return null;
+        }
+
+        exitGame_Btn.gameObject.SetActive(true);
+        manualObj.SetActive(false);
     }
 
     /// <summary>
@@ -238,6 +259,6 @@ public class GamePanel : BasePanel
         bool result = pack.ReturnCode == ReturnCode.Succeed ? true : false;
 
         gameOver_Obj.SetActive(true);
-        result_Txt.text = result ? "獲勝!!!" : "死掉了...";
+        result_Txt.text = result ? "手起刀落!!!" : "死掉了。。。";
     }
 }

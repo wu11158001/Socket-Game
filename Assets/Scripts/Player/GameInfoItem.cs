@@ -21,7 +21,7 @@ public class GameInfoItem : MonoBehaviour
     public void SetInfo(string name, int hp, int kills)
     {
         userName_Txt.text = name;
-        totalKill_Txt.text = $"擊殺數:{kills}";
+        totalKill_Txt.text = $"慘忍度:{kills}";
         hp_Sli.value = hp;
 
         initKill = kills;

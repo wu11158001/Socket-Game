@@ -52,7 +52,7 @@ public class UserItem : MonoBehaviour
         transform.localScale = Vector3.one;
 
         playerName_Txt.text = userName;
-        killCount_Txt.text = $"擊殺數:{kills}";
+        killCount_Txt.text = $"慘忍度:{kills}";
 
         string colorStr = isSelf ? "#3EE510" : "#CFBBBB";
         if (ColorUtility.TryParseHtmlString(colorStr, out Color textColor))
