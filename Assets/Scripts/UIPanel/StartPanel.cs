@@ -5,7 +5,13 @@ using UnityEngine.UI;
 
 public class StartPanel : BasePanel
 {
-    public Button startBtn;
+    [SerializeField] private Button startBtn;
+    [SerializeField] private Text start_Txt;
+    [SerializeField] private CanvasGroup canvasGroup;
+
+    private float flickerInterval = 1.0f;
+    private float fadeDuration = 1.0f;
+
 
     /// <summary>
     /// UI面板開始
@@ -62,6 +68,14 @@ public class StartPanel : BasePanel
     private void Start()
     {
         startBtn.onClick.AddListener(StartBtnClick);
+
+        InvokeRepeating("ToggleTextVisibility", 0f, flickerInterval);
+        StartCoroutine(FadeText());
+    }
+
+    private void Update()
+    {
+        start_Txt.color = new Color(start_Txt.color.r, start_Txt.color.g, start_Txt.color.b, canvasGroup.alpha);
     }
 
     /// <summary>
@@ -70,5 +84,42 @@ public class StartPanel : BasePanel
     void StartBtnClick()
     {
         uiManager.PushPanel(PanelType.Login);
+    }
+
+    private void ToggleTextVisibility()
+    {
+       
+    }
+
+    private IEnumerator FadeText()
+    {
+        while (true)
+        {
+            yield return StartCoroutine(FadeIn());
+            yield return new WaitForSeconds(1.0f);
+            yield return StartCoroutine(FadeOut());
+        }
+    }
+
+    private IEnumerator FadeIn()
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < fadeDuration)
+        {
+            canvasGroup.alpha = Mathf.Lerp(0f, 1f, elapsedTime / fadeDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    private IEnumerator FadeOut()
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < fadeDuration)
+        {
+            canvasGroup.alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
     }
 }

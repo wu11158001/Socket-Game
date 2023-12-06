@@ -6,13 +6,13 @@ using SocketGameProtobuf;
 public class GameFace : MonoBehaviour
 {
     private static GameFace gameFace;
-    public static GameFace Instance 
-    { 
-        get 
-        { 
-            if(gameFace == null) gameFace = GameObject.Find("GameFace").GetComponent<GameFace>();
+    public static GameFace Instance
+    {
+        get
+        {
+            if (gameFace == null) gameFace = GameObject.Find("GameFace").GetComponent<GameFace>();
             return gameFace;
-        } 
+        }
     }
 
     private ClientManager clientManager;
@@ -21,6 +21,10 @@ public class GameFace : MonoBehaviour
     private PlayerManager playerManager;
 
     public string UserName { get; set; }
+
+    //背景
+    [SerializeField] private GameObject bg;
+    public bool SetBgActive{set{ bg.SetActive(value); }}
 
     private void Awake()
     {
@@ -113,6 +117,7 @@ public class GameFace : MonoBehaviour
     /// </summary>
     public void LeaveGame()
     {
+        SetBgActive = true;
         playerManager.LeaveGame();
         uIManager.PopPanel();
         uIManager.PopPanel();

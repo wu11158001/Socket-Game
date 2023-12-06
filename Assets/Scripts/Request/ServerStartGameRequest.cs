@@ -21,6 +21,7 @@ public class ServerStartGameRequest : BaseRequest
         {
             Debug.Log("遊戲開始");
 
+            gameFace.SetBgActive = false;
             gameFace.AddPlayer(pack);
             roomPanel.GameStartInit(pack);
 
