@@ -51,7 +51,7 @@ public class PlayerManager : BaseManager
                 //標記
                 GameObject gemObj = GameObject.Instantiate(gem);
                 gemObj.transform.SetParent(obj.transform);
-                gemObj.transform.localPosition = new Vector3(0, 0.78f, 0);
+                gemObj.transform.localPosition = new Vector3(0, 1.1f, 0);
                 gemObj.name = "Gem";
 
                 //添加攻擊框

@@ -61,6 +61,7 @@ public class RoomPanel : BasePanel
     /// </summary>
     void Entter()
     {
+        leave_Btn.enabled = true;
         chat_Txt.text = "";
         gameObject.SetActive(true);
     }
@@ -187,6 +188,7 @@ public class RoomPanel : BasePanel
                 break;
             case ReturnCode.Succeed:
                 start_Btn.enabled = false;
+                leave_Btn.enabled = false;
                 uiManager.ShowTip("準備開始遊戲");
                 break;
         }

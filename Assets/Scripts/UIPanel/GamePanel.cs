@@ -25,9 +25,7 @@ public class GamePanel : BasePanel
 
     public GameObject gameOver_Obj;
     public Text result_Txt;
-    public Button confirm_Btn;
-
-    
+    public Button confirm_Btn;    
 
     //存放玩家訊息(玩家名稱,訊息列表)
     private Dictionary<string, GameInfoItem> infoDic = new Dictionary<string, GameInfoItem>();
@@ -103,7 +101,7 @@ public class GamePanel : BasePanel
         confirm_Btn.onClick.AddListener(OnExitGameClick);
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         time_Txt.text = Mathf.Clamp((int)(Time.time - startTime), 0, 300).ToString();
 
@@ -116,10 +114,16 @@ public class GamePanel : BasePanel
                 //判斷是否在視野內
                 if ((viewportPos.x > 0 && viewportPos.x < 1) || !arrow.Key.GetActionable)
                 {
+                    //位置箭頭物件
                     arrow.Value.gameObject.SetActive(false);
-                    if(headInfoDic.TryGetValue(arrow.Key, out RectTransform rt))
+
+                    //頭頂訊息物件
+                    if (headInfoDic.TryGetValue(arrow.Key, out RectTransform rt))
                     {
-                        rt.gameObject.SetActive(false);
+                        rt.gameObject.SetActive(true);
+                        float headInfoPosX = (canvasRect.rect.width * viewportPos.x) - (canvasRect.rect.width / 2);
+                        float headInfoPosY = ((canvasRect.rect.height * viewportPos.y) - (canvasRect.rect.height / 2)) + 46;
+                        rt.anchoredPosition = new Vector2(headInfoPosX, headInfoPosY);
                     }
                 }
                 else
@@ -136,11 +140,8 @@ public class GamePanel : BasePanel
                     //頭頂訊息物件
                     if (headInfoDic.TryGetValue(arrow.Key, out RectTransform rt))
                     {
-                        rt.gameObject.SetActive(true);
-                        float headInfoPosX = (canvasRect.rect.width * viewportPos.x) - (canvasRect.rect.width / 2);
-                        float headInfoPosY = (canvasRect.rect.height / 2 * viewportPos.y);
-                        rt.anchoredPosition = new Vector2(headInfoPosX, headInfoPosY);
-                    }              
+                        rt.gameObject.SetActive(false);
+                    }                              
                 }
             }            
         }
@@ -161,18 +162,16 @@ public class GamePanel : BasePanel
     /// <param name="pack"></param>
     public void UpdateGameInfoList(MainPack pack)
     {
-        //移除訊息項目
+        //移除項目
         for (int i = 0; i < gameInfoListTransform.childCount; i++)
         {
             Destroy(gameInfoListTransform.GetChild(i).gameObject);
+            Destroy(posArrowTransform.GetChild(i).gameObject);
+            Destroy(headInfoTransform.GetChild(i).gameObject);
         }
         infoDic.Clear();
-        //移除位置箭頭物件
-        foreach (var arrow in playerArrowDic.Values)
-        {
-            Destroy(arrow.gameObject);
-        }
         playerArrowDic.Clear();
+        headInfoDic.Clear();
 
         //添加
         foreach (var player in pack.PlayerPack)
@@ -196,7 +195,14 @@ public class GamePanel : BasePanel
             headInfoObj.transform.SetParent(headInfoTransform);
             headInfoObj.name = $"{player.PlayerName}_HeadInfo";
             Image healthBar = headInfoObj.transform.Find("HealthBar_Img").GetComponent<Image>();
-            healthBar.fillAmount = player.HP / player.MaxHp;
+            healthBar.fillAmount = (float)player.HP / (float)player.MaxHp;
+            Text playerName = headInfoObj.transform.Find("PlayerName_Txt").GetComponent<Text>();
+            playerName.text = player.PlayerName;
+            string colorStr = player.PlayerName == gameFace.UserName ? "#69DE3C" : "#FF0003";
+            if (ColorUtility.TryParseHtmlString(colorStr, out Color textColor))
+            {
+                playerName.color = textColor;
+            }
             headInfoDic.Add(gameFace.GetPlayers()[player.PlayerName], headInfoObj);
         }
     }
