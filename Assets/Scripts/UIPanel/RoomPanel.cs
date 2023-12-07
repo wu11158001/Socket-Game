@@ -94,6 +94,7 @@ public class RoomPanel : BasePanel
     /// </summary>
     void OnLeaveClick()
     {
+        gameFace.ButtonClick();
         roomExitRequest.SendRequest();
     }
 
@@ -110,7 +111,9 @@ public class RoomPanel : BasePanel
     /// </summary>
     void OnSendClick()
     {
-        if(chat_IF.text == "")
+        gameFace.ButtonClick();
+
+        if (chat_IF.text == "")
         {
             uiManager.ShowTip("發送內容不能為空");
             return;
@@ -180,6 +183,7 @@ public class RoomPanel : BasePanel
     /// </summary>
     void OnStartClick()
     {
+        gameFace.ButtonClick();
         startGameRequest.SendRequest();
     }
 

@@ -87,6 +87,8 @@ public class LogonPanel : BasePanel
     /// </summary>
     void OnLogonClick()
     {
+        gameFace.ButtonClick();
+
         //防呆
         if (acc_IF.text == "" || psw_IF.text == "")
         {
@@ -109,6 +111,7 @@ public class LogonPanel : BasePanel
     /// </summary>
     void OnSwitchLoginClick()
     {
+        gameFace.ButtonClick();
         uiManager.PopPanel();
     }
 

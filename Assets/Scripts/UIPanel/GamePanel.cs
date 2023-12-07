@@ -33,9 +33,9 @@ public class GamePanel : BasePanel
     //存放玩家訊息(玩家名稱,訊息列表)
     private Dictionary<string, GameInfoItem> infoDic = new Dictionary<string, GameInfoItem>();
     //存放玩家位置箭頭(玩家狀態,箭頭物件)
-    private Dictionary<UpdateCharacterState, RectTransform> playerArrowDic = new Dictionary<UpdateCharacterState, RectTransform>();
+    private Dictionary<AnimationEvent, RectTransform> playerArrowDic = new Dictionary<AnimationEvent, RectTransform>();
     //存放玩家頭頂訊息(玩家名稱,頭頂物件)
-    private Dictionary<UpdateCharacterState, RectTransform> headInfoDic = new Dictionary<UpdateCharacterState, RectTransform>();
+    private Dictionary<AnimationEvent, RectTransform> headInfoDic = new Dictionary<AnimationEvent, RectTransform>();
 
     /// <summary>
     /// UI面板開始
@@ -112,8 +112,8 @@ public class GamePanel : BasePanel
             {
                 Vector3 viewportPos = mainCamera.WorldToViewportPoint(arrow.Key.transform.position);
 
-                //判斷是否在視野內
-                if ((viewportPos.x > 0 && viewportPos.x < 1) || !arrow.Key.GetActionable)
+                //判斷是否在視野內 && 是否可行動
+                if ((viewportPos.x > 0 && viewportPos.x < 1))
                 {
                     //位置箭頭物件
                     arrow.Value.gameObject.SetActive(false);
@@ -173,7 +173,10 @@ public class GamePanel : BasePanel
     /// </summary>
     public void OnExitGameClick()
     {
+        gameFace.ButtonClick();
+
         gameExitRequest.SendRequest();
+        gameFace.PlayBGM("Hall");        
         gameFace.LeaveGame();
     }
 

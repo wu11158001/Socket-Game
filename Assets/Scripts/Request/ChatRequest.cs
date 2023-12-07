@@ -21,6 +21,12 @@ public class ChatRequest : BaseRequest
         if(chatStr != null)
         {
             roomPanel.ChatResponse(chatStr);
+
+            if (chatStr.Contains("遊戲開始倒數"))
+            {
+                gameFace.PlaySound("StartDountDown");
+            }
+
             chatStr = null;
         }
     }

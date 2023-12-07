@@ -8,8 +8,8 @@ public class PlayerManager : BaseManager
     public PlayerManager(GameFace gameFace) : base(gameFace) { }
 
     //存放房間玩家
-    private Dictionary<string, UpdateCharacterState> playerDic = new Dictionary<string, UpdateCharacterState>();
-    public Dictionary<string, UpdateCharacterState> GetPlayers { get { return playerDic; } }
+    private Dictionary<string, AnimationEvent> playerDic = new Dictionary<string, AnimationEvent>();
+    public Dictionary<string, AnimationEvent> GetPlayers { get { return playerDic; } }
 
     private GameObject[] characters;//角色物件
     private GameObject attackBox;//攻擊框
@@ -42,11 +42,10 @@ public class PlayerManager : BaseManager
             Rigidbody2D r2d = obj.AddComponent<Rigidbody2D>();
             r2d.gravityScale = 10;
             r2d.freezeRotation = true;
-
-            UpdateCharacterState role = obj.AddComponent<UpdateCharacterState>();
+            
             SoundRequest soundRequest = obj.AddComponent<SoundRequest>();
-
-            obj.AddComponent<AnimationEvent>().soundRequest = soundRequest;
+            AnimationEvent animationEvent = obj.AddComponent<AnimationEvent>();
+            animationEvent.soundRequest = soundRequest;
 
             //創建本地角色
             if (player.PlayerName.Equals(gameFace.UserName))
@@ -73,9 +72,9 @@ public class PlayerManager : BaseManager
             }
 
             obj.name = player.PlayerName;
-            role.userName = player.PlayerName;
+            animationEvent.userName = player.PlayerName;
 
-            playerDic.Add(player.PlayerName, role);
+            playerDic.Add(player.PlayerName, animationEvent);
         }
     }
 
@@ -85,7 +84,7 @@ public class PlayerManager : BaseManager
     /// <param name="name"></param>
     public void RemovePlayer(string name)
     {
-        if (playerDic.TryGetValue(name, out UpdateCharacterState obj))
+        if (playerDic.TryGetValue(name, out AnimationEvent obj))
         {
             GameObject.Destroy(obj.gameObject);
             playerDic.Remove(name);
@@ -115,7 +114,7 @@ public class PlayerManager : BaseManager
     public void UpdatePos(MainPack pack)
     {
         PosPack posPack = pack.PlayerPack[0].PosPack;
-        if (playerDic.TryGetValue(pack.PlayerPack[0].PlayerName, out UpdateCharacterState obj))
+        if (playerDic.TryGetValue(pack.PlayerPack[0].PlayerName, out AnimationEvent obj))
         {
             Vector2 pos = new Vector2(posPack.PosX, posPack.PosY);
             obj.UpdatePos(pos);
@@ -129,7 +128,7 @@ public class PlayerManager : BaseManager
     public void UpdateAni(MainPack pack)
     {
         AniPack aniPack = pack.PlayerPack[0].AniPack;
-        if (playerDic.TryGetValue(pack.PlayerPack[0].PlayerName, out UpdateCharacterState obj))
+        if (playerDic.TryGetValue(pack.PlayerPack[0].PlayerName, out AnimationEvent obj))
         {
             string aniName = aniPack.AnimationName;
             bool isActive = aniPack.IsActive;
@@ -146,7 +145,7 @@ public class PlayerManager : BaseManager
     {
         foreach (var player in pack.PlayerPack)
         {
-            if (playerDic.TryGetValue(player.PlayerName, out UpdateCharacterState obj))
+            if (playerDic.TryGetValue(player.PlayerName, out AnimationEvent obj))
             {
                 obj.Hurt();
             }
@@ -161,7 +160,7 @@ public class PlayerManager : BaseManager
     {
         foreach (var player in pack.PlayerPack)
         {
-            if (playerDic.TryGetValue(player.PlayerName, out UpdateCharacterState obj))
+            if (playerDic.TryGetValue(player.PlayerName, out AnimationEvent obj))
             {
                 bool result = pack.ReturnCode == ReturnCode.Succeed ? true : false;
                 obj.GameOver(result);

@@ -14,7 +14,7 @@ public class SoundManager : BaseManager
     private AudioClip[] soundClips;
     private AudioClip[] musicClips;
 
-    private bool isSound = true, isMusic = true;
+    private bool isSoundMute, isMusicMute;
 
     public override void OnInit()
     {
@@ -35,10 +35,10 @@ public class SoundManager : BaseManager
     /// <param name="isMusic">音樂</param>
     public void SoundSwitch(bool isSound, bool isMusic)
     {
-        this.isSound = isSound;
-        this.isMusic = isMusic;
+        isSoundMute = !isSound;
+        isMusicMute = !isMusic;
 
-        BGMSource.mute = isMusic;
+        BGMSource.mute = isMusicMute;
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public class SoundManager : BaseManager
     /// <param name="clipName"></param>
     public void PlaySound(string clipName)
     {
-        if (!isSound) return;
+        if (isSoundMute) return;
 
         bool isHave = soundClips.ToList().Where(x => x.name == clipName).Count() > 0;
         if (isHave)
@@ -83,7 +83,7 @@ public class SoundManager : BaseManager
     /// <param name="clipName"></param>
     public void PlayBGM(string clipName)
     {
-        if (!isMusic) return;
+        if (isMusicMute) return;
 
         bool isHave = musicClips.ToList().Where(x => x.name == clipName).Count() > 0;
         if (isHave)
@@ -96,5 +96,13 @@ public class SoundManager : BaseManager
         {
             Debug.LogError("沒有找到音樂:" + clipName);
         }
+    }
+
+    /// <summary>
+    /// 按鈕點擊音效
+    /// </summary>
+    public void ButtonClick()
+    {
+        PlaySound("ButtonClick");
     }
 }

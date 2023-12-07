@@ -110,7 +110,7 @@ public class GameFace : MonoBehaviour
     /// 獲取遊戲玩家
     /// </summary>
     /// <returns></returns>
-    public Dictionary<string, UpdateCharacterState> GetPlayers()
+    public Dictionary<string, AnimationEvent> GetPlayers()
     {
         return playerManager.GetPlayers;
     }
@@ -160,6 +160,14 @@ public class GameFace : MonoBehaviour
     public void GameResult(MainPack pack)
     {
         playerManager.GameResult(pack);
+    }
+
+    /// <summary>
+    /// 按鈕點擊音效
+    /// </summary>
+    public void ButtonClick()
+    {
+        soundManager.ButtonClick();
     }
 
     /// <summary>

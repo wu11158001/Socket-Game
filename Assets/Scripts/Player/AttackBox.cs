@@ -7,7 +7,7 @@ public class AttackBox : MonoBehaviour
     private AttackRequest attackRequest;
 
     private BoxCollider2D box2D;
-    private UpdateCharacterState self;
+    private AnimationEvent self;
 
     private float initPosX;
 
@@ -21,7 +21,7 @@ public class AttackBox : MonoBehaviour
         attackRequest = GetComponent<AttackRequest>();
 
         box2D = GetComponent<BoxCollider2D>();
-        self = GetComponent<UpdateCharacterState>();
+        self = GetComponent<AnimationEvent>();
 
         initPosX = box2D.offset.x;
         box2D.enabled = false;
@@ -55,7 +55,7 @@ public class AttackBox : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        UpdateCharacterState hitCharacter = collision.GetComponent<UpdateCharacterState>();
+        AnimationEvent hitCharacter = collision.GetComponent<AnimationEvent>();
         if (hitCharacter != null && hitCharacter != self)
         {        
             string hit = hitCharacter.userName;

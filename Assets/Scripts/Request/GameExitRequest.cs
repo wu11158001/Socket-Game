@@ -18,7 +18,6 @@ public class GameExitRequest : BaseRequest
     {
         if (pack != null)
         {
-            gameFace.PlayBGM("Hall");
             gameFace.LeaveGame();
             pack = null;
         }

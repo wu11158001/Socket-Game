@@ -86,21 +86,31 @@ public class RoomListPanel : BasePanel
     private void Start()
     {
         logout_Btn.onClick.AddListener(OnLogoutClick);
-        serch_Btn.onClick.AddListener(OnSearchClick);
+        serch_Btn.onClick.AddListener(() => 
+        {
+            gameFace.ButtonClick();
+            OnSearchClick(); 
+        });
         create_Btn.onClick.AddListener(OnCreateClick);
         joinRoom_Btn.onClick.AddListener(delegate { JoinRoom(joinRoom_IF.text); });
-        count_Sli.onValueChanged.AddListener((val => { count_Txt.text = $"{val}人"; }));
+        count_Sli.onValueChanged.AddListener((val => 
+        {
+            gameFace.ButtonClick(); 
+            count_Txt.text = $"{val}人"; }
+        ));
         sound_Btn.onClick.AddListener(() =>
         {
             isSound = !isSound;
             sound_Img.sprite = isSound ? soundOpen : soundClose;
             gameFace.SoundSwitch(isSound, isMusic);
+            gameFace.ButtonClick();
         });
         music_Btn.onClick.AddListener(() =>
         {
             isMusic = !isMusic;
             music_Img.sprite = isMusic ? musicOpen : musicClose;
             gameFace.SoundSwitch(isSound, isMusic);
+            gameFace.ButtonClick();
         });
     }
 
@@ -118,6 +128,7 @@ public class RoomListPanel : BasePanel
     /// </summary>
     void OnLogoutClick()
     {
+        gameFace.ButtonClick();
         logoutRequest.SendRequest();
         uiManager.PopPanel();        
     }
@@ -135,7 +146,9 @@ public class RoomListPanel : BasePanel
     /// </summary>
     void OnCreateClick()
     {
-        if(createName_IF.text == "") createName_IF.text = gameFace.UserName;
+        gameFace.ButtonClick();
+
+        if (createName_IF.text == "") createName_IF.text = gameFace.UserName;
         createRoomRequest.SendRequest(createName_IF.text, (int)count_Sli.value);
 
         createName_IF.text = "";
@@ -210,8 +223,10 @@ public class RoomListPanel : BasePanel
     /// <param name="roomName">房間名</param>
     public void JoinRoom(string roomName)
     {
+
         joinRoomRequest.SendRequest(roomName);
 
+        gameFace.ButtonClick();
         joinRoom_IF.text = "";
     }
 

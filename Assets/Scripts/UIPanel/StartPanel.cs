@@ -83,6 +83,7 @@ public class StartPanel : BasePanel
     /// </summary>
     void StartBtnClick()
     {
+        gameFace.ButtonClick();
         uiManager.PushPanel(PanelType.Login);
     }
 

@@ -9,7 +9,7 @@ public class UserController : MonoBehaviour
     private SpriteRenderer body;
 
     private AttackBox attackBox;
-    private UpdateCharacterState updateCharacterState;
+    private AnimationEvent updateCharacterState;
     private UpdatePosRequest updatePosRequest;
     private UpdateAinRequest updateAniRequest;
 
@@ -27,7 +27,7 @@ public class UserController : MonoBehaviour
         body = GetComponent<SpriteRenderer>();
         attackBox = GetComponentInChildren<AttackBox>();
 
-        updateCharacterState = GetComponent<UpdateCharacterState>();
+        updateCharacterState = GetComponent<AnimationEvent>();
         updatePosRequest = GetComponent<UpdatePosRequest>();
         updateAniRequest = GetComponent<UpdateAinRequest>();
 
