@@ -103,6 +103,7 @@ public class GameFace : MonoBehaviour
     /// <param name="name"></param>
     public void RemovePlayer(string name)
     {
+        uIManager.ShowTip($"{name} 離開了遊戲!");
         playerManager.RemovePlayer(name);
     }
 
@@ -120,6 +121,7 @@ public class GameFace : MonoBehaviour
     /// </summary>
     public void LeaveGame()
     {
+        uIManager.ShowTip($"");
         SetBgActive = true;
         playerManager.LeaveGame();
         uIManager.PopPanel();
