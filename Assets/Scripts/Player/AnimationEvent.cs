@@ -180,6 +180,16 @@ public class AnimationEvent : MonoBehaviour
     }
 
     /// <summary>
+    /// 死亡
+    /// </summary>
+    void OnDie()
+    {
+        soundRequest.PlaySound("Die");
+        Destroy(r2d);
+        Destroy(box2d);
+    }
+
+    /// <summary>
     /// 遊戲結果
     /// </summary>
     /// <param name="result">是否獲勝</param>
@@ -188,7 +198,7 @@ public class AnimationEvent : MonoBehaviour
         isActionable = false;
 
         string triggerName = result ? "Win_Tr" : "Die_Tr";
-        string clip = result ? "Win" : "Die";
+        string clip = result ? "Win" : "Fail";
         soundRequest.PlaySound(clip);
         animator.SetTrigger(triggerName);
 

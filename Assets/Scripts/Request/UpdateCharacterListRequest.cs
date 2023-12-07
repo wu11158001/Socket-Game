@@ -19,9 +19,20 @@ public class UpdateCharacterListRequest : BaseRequest
     {
         if (pack != null)
         {
-            gamePanel.UpdateGameInfoList(pack);
-
-            if (pack.Str != "UpdateCharacterList") gameFace.RemovePlayer(pack.Str);
+            switch(pack.Str)
+            {
+                case "UpdateCharacterList":
+                    gamePanel.UpdateGameInfoList(pack);
+                    break;
+                case "UpdateCharacterListValue":
+                    gamePanel.UpdateGameInfoListValue(pack);
+                    break;
+                default:
+                    gamePanel.UpdateGameInfoList(pack);
+                    gameFace.RemovePlayer(pack.Str);
+                    break;
+            }
+            
             pack = null;
         }
     }

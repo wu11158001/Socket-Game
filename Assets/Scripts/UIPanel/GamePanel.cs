@@ -33,9 +33,9 @@ public class GamePanel : BasePanel
     //存放玩家訊息(玩家名稱,訊息列表)
     private Dictionary<string, GameInfoItem> infoDic = new Dictionary<string, GameInfoItem>();
     //存放玩家位置箭頭(玩家狀態,箭頭物件)
-    private Dictionary<AnimationEvent, RectTransform> playerArrowDic = new Dictionary<AnimationEvent, RectTransform>();
+    private Dictionary<string, RectTransform> playerArrowDic = new Dictionary<string, RectTransform>();
     //存放玩家頭頂訊息(玩家名稱,頭頂物件)
-    private Dictionary<AnimationEvent, RectTransform> headInfoDic = new Dictionary<AnimationEvent, RectTransform>();
+    private Dictionary<string, HeadInfo> headInfoDic = new Dictionary<string, HeadInfo>();
 
     /// <summary>
     /// UI面板開始
@@ -106,43 +106,39 @@ public class GamePanel : BasePanel
 
     private void Update()
     {
-        foreach (var arrow in playerArrowDic)
+        foreach (var item in infoDic)
         {
-            if (arrow.Key != null)
+            if (item.Value != null)
             {
-                Vector3 viewportPos = mainCamera.WorldToViewportPoint(arrow.Key.transform.position);
+                if (!gameFace.GetPlayers().TryGetValue(item.Key, out AnimationEvent animationEvent)) return;
+
+                Vector3 viewportPos = mainCamera.WorldToViewportPoint(gameFace.GetPlayers()[item.Key].transform.position);
 
                 //判斷是否在視野內 && 是否可行動
                 if ((viewportPos.x > 0 && viewportPos.x < 1))
                 {
                     //位置箭頭物件
-                    arrow.Value.gameObject.SetActive(false);
+                    playerArrowDic[item.Key].gameObject.SetActive(false);
 
                     //頭頂訊息物件
-                    if (headInfoDic.TryGetValue(arrow.Key, out RectTransform rt))
-                    {
-                        rt.gameObject.SetActive(true);
-                        float headInfoPosX = (canvasRect.rect.width * viewportPos.x) - (canvasRect.rect.width / 2);
-                        float headInfoPosY = ((canvasRect.rect.height * viewportPos.y) - (canvasRect.rect.height / 2)) + 46;
-                        rt.anchoredPosition = new Vector2(headInfoPosX, headInfoPosY);
-                    }
+                    headInfoDic[item.Key].gameObject.SetActive(true);
+                    float headInfoPosX = (canvasRect.rect.width * viewportPos.x) - (canvasRect.rect.width / 2);
+                    float headInfoPosY = ((canvasRect.rect.height * viewportPos.y) - (canvasRect.rect.height / 2)) + 46;
+                    headInfoDic[item.Key].SetPos(new Vector2(headInfoPosX, headInfoPosY));
                 }
                 else
                 {
                     //位置箭頭物件
-                    arrow.Value.gameObject.SetActive(true);
+                    playerArrowDic[item.Key].gameObject.SetActive(true);
                     float dir = viewportPos.x < 0 ? -1 : 1;
                     float arrowPosX = ((canvasRect.rect.width / 2) - 50) * dir;
                     float arrowPosY = (canvasRect.rect.height * viewportPos.y) - (canvasRect.rect.height / 2);
                     float arrowRotZ = viewportPos.x < 0 ? 180 : 0;
-                    arrow.Value.rotation = Quaternion.Euler(0, 0, arrowRotZ);
-                    arrow.Value.anchoredPosition = new Vector2(arrowPosX, arrowPosY);
+                    playerArrowDic[item.Key].rotation = Quaternion.Euler(0, 0, arrowRotZ);
+                    playerArrowDic[item.Key].anchoredPosition = new Vector2(arrowPosX, arrowPosY);
 
                     //頭頂訊息物件
-                    if (headInfoDic.TryGetValue(arrow.Key, out RectTransform rt))
-                    {
-                        rt.gameObject.SetActive(false);
-                    }                              
+                    headInfoDic[item.Key].gameObject.SetActive(false);
                 }
             }            
         }
@@ -159,7 +155,7 @@ public class GamePanel : BasePanel
         Color color = new Color(0, 0, 0, 1);
         while (color.a > 0)
         {
-            color.a -= 0.3f * Time.deltaTime;
+            color.a -= 0.4f * Time.deltaTime;
             manualBg_Img.color = color;
             yield return null;
         }
@@ -212,22 +208,33 @@ public class GamePanel : BasePanel
             RectTransform arrowObj = Instantiate(posArrow).GetComponent<RectTransform>();
             arrowObj.transform.SetParent(posArrowTransform);
             arrowObj.name = $"{player.PlayerName}_Arrow";
-            playerArrowDic.Add(gameFace.GetPlayers()[player.PlayerName], arrowObj);
+            playerArrowDic.Add(player.PlayerName, arrowObj);
 
             //添加頭頂訊息
-            RectTransform headInfoObj = Instantiate(headInfo).GetComponent<RectTransform>();
+            HeadInfo headInfoObj = Instantiate(headInfo).GetComponent<HeadInfo>();
             headInfoObj.transform.SetParent(headInfoTransform);
             headInfoObj.name = $"{player.PlayerName}_HeadInfo";
-            Image healthBar = headInfoObj.transform.Find("HealthBar_Img").GetComponent<Image>();
-            healthBar.fillAmount = (float)player.HP / (float)player.MaxHp;
-            Text playerName = headInfoObj.transform.Find("PlayerName_Txt").GetComponent<Text>();
-            playerName.text = player.PlayerName;
+            float hp = (float)player.HP / (float)player.MaxHp;
+            string name = player.PlayerName;
             string colorStr = player.PlayerName == gameFace.UserName ? "#69DE3C" : "#FF0003";
-            if (ColorUtility.TryParseHtmlString(colorStr, out Color textColor))
-            {
-                playerName.color = textColor;
-            }
-            headInfoDic.Add(gameFace.GetPlayers()[player.PlayerName], headInfoObj);
+            headInfoObj.SetInitInfo(name, colorStr, hp);
+            headInfoDic.Add(player.PlayerName, headInfoObj);
+        }
+    }
+
+    /// <summary>
+    /// 更新遊戲訊息
+    /// </summary>
+    /// <param name="pack"></param>
+    public void UpdateGameInfoListValue(MainPack pack)
+    {
+        foreach (var player in pack.PlayerPack)
+        {
+            //訊息項目
+            infoDic[player.PlayerName].SetInfo(player.PlayerName, player.HP, player.TotalKill);
+
+            //頭頂訊息            
+            headInfoDic[player.PlayerName].SetHPValue((float)player.HP / (float)player.MaxHp);
         }
     }
 
