@@ -167,6 +167,9 @@ public class RoomListPanel : BasePanel
                 RoomPanel roomPanel = uiManager.PushPanel(PanelType.Room).GetComponent<RoomPanel>();
                 roomPanel.UpdatePlayList(pack);
                 break;
+            case ReturnCode.DuplicateRoom:
+                uiManager.ShowTip("房間名已存在");
+                break;
             case ReturnCode.Fail:
                 uiManager.ShowTip("創建失敗");
                 break;
