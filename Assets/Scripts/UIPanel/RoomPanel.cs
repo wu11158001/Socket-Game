@@ -81,6 +81,14 @@ public class RoomPanel : BasePanel
         start_Btn.onClick.AddListener(OnStartClick);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            if (chat_IF.isFocused) OnSendClick();
+        }
+    }
+
     /// <summary>
     /// 按下離開房間
     /// </summary>
@@ -109,7 +117,7 @@ public class RoomPanel : BasePanel
         }
 
         chatRequest.SendRequest(chat_IF.text);
-        chat_Txt.text += "自己:" + chat_IF.text + "\n";
+        chat_Txt.text += $"<color=#E254DB>自己:{chat_IF.text.Trim()}</color>\n";
         chat_IF.text = "";
         chat_Sb.value = 0;
     }
@@ -120,7 +128,7 @@ public class RoomPanel : BasePanel
     /// <param name="str">聊天內容</param>
     public void ChatResponse(string str)
     {
-        chat_Txt.text += str + "\n";
+        chat_Txt.text += $"<color=#594949>{str}</color>\n";
         chat_Sb.value = 0;
     }
 

@@ -6,13 +6,12 @@ using SocketGameProtobuf;
 public class UpdateCharacterState : MonoBehaviour
 {
     private UserController userController;
+    private AnimationEvent animationEvent;
+
     private SpriteRenderer body;
     private Animator animator;
-    private Rigidbody2D r2d;
-    private BoxCollider2D box2d;
 
     public string userName;
-    private float initGravity;
 
     private float limitPosX = 17;//移動限制範圍
 
@@ -22,12 +21,9 @@ public class UpdateCharacterState : MonoBehaviour
     private void Start()
     {
         userController = GetComponent<UserController>();
-        animator = transform.Find("Body").GetComponent<Animator>();
-        body = transform.Find("Body").GetComponent<SpriteRenderer>();
-        r2d = GetComponent<Rigidbody2D>();
-        box2d = GetComponent<BoxCollider2D>();
-
-        initGravity = r2d.gravityScale;
+        animationEvent = GetComponent<AnimationEvent>();
+        animator = GetComponent<Animator>();
+        body = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -37,7 +33,7 @@ public class UpdateCharacterState : MonoBehaviour
         {
             if (animator.GetBool(AnimatorHash.IsRun))
             {
-                int dir = body.flipX ? 1 : -1;
+                int dir = body.flipX ? -1 : 1;
                 transform.position = new Vector3(transform.position.x + 10 * dir * Time.deltaTime, transform.position.y, transform.position.z);
             }
         }
@@ -75,16 +71,7 @@ public class UpdateCharacterState : MonoBehaviour
         
         animator.SetBool(aniName, isActive);
 
-        if (aniName == "IsDash" && isActive == false) StopDash();
-    }
-
-    /// <summary>
-    /// 停止翻滾(閃躲)
-    /// </summary>
-    void StopDash()
-    {
-        r2d.gravityScale = initGravity;
-        box2d.enabled = true;
+        if (aniName == "IsDash" && isActive == false) animationEvent.StopDash();
     }
 
     /// <summary>
@@ -92,8 +79,7 @@ public class UpdateCharacterState : MonoBehaviour
     /// </summary>
     public void Hurt()
     {
-        animator.SetTrigger(AnimatorHash.Hurt_Tr);
-        if (userController) userController.OnHurt();
+        animationEvent.Hurt();
     }
 
     /// <summary>

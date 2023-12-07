@@ -23,8 +23,8 @@ public class UserController : MonoBehaviour
     private void Start()
     {
         mainCamera = Camera.main;
-        animator = transform.Find("Body").GetComponent<Animator>();
-        body = transform.Find("Body").GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+        body = GetComponent<SpriteRenderer>();
         attackBox = GetComponentInChildren<AttackBox>();
 
         updateCharacterState = GetComponent<UpdateCharacterState>();
@@ -72,41 +72,41 @@ public class UserController : MonoBehaviour
     private void InputContrl()
     {
         //左
-        if (Input.GetKey(KeyCode.A) && !isRun)
-        {
-            isRun = true;
-            body.flipX = false;
-            SetAni("IsRun", body.flipX);
-        }
-        //右
-        if (Input.GetKey(KeyCode.D) && !isRun)
+        if (Input.GetKey(KeyCode.LeftArrow) && !isRun)
         {
             isRun = true;
             body.flipX = true;
             SetAni("IsRun", body.flipX);
         }
+        //右
+        if (Input.GetKey(KeyCode.RightArrow) && !isRun)
+        {
+            isRun = true;
+            body.flipX = false;
+            SetAni("IsRun", body.flipX);
+        }
         //停止移動
-        if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
+        if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow))
         {
             isRun = false;
             SetAni("IsRun", body.flipX, false);
         }
 
         //跳躍
-        if (Input.GetKeyDown(KeyCode.W) && isFloor && !isAttack)
+        if (Input.GetKeyDown(KeyCode.UpArrow) && isFloor && !isAttack)
         {
             SetAni("IsJump", body.flipX);
         }
 
         //翻滾(閃躲)
-        if (Input.GetKeyDown(KeyCode.K) && isFloor && !isAttack)
+        if (Input.GetKeyDown(KeyCode.X) && isFloor && !isAttack)
         {
             isDash = true;
             SetAni("IsDash", body.flipX);
         }
 
         //攻擊
-        if (Input.GetKeyDown(KeyCode.J) && !isAttack && !isDash)
+        if (Input.GetKeyDown(KeyCode.Z) && !isAttack && !isDash)
         {
             isAttack = true;
             if (isFloor) SetAni("IsAttack", body.flipX);

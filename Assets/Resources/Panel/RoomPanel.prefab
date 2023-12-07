@@ -449,7 +449,7 @@ MonoBehaviour:
   m_InputType: 0
   m_AsteriskChar: 42
   m_KeyboardType: 0
-  m_LineType: 0
+  m_LineType: 2
   m_HideMobileInput: 0
   m_CharacterValidation: 0
   m_CharacterLimit: 0
@@ -787,8 +787,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3800156258882327141}
   m_HandleRect: {fileID: 8126953620105805021}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.94118357
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1052,7 +1052,7 @@ MonoBehaviour:
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
+    m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
@@ -1679,7 +1679,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 929727134218094041}
   m_HandleRect: {fileID: 8663441982195770313}
   m_Direction: 2
-  m_Value: 1.2340425
+  m_Value: 1
   m_Size: 0.999995
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2306,8 +2306,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.12420654, y: 0.000021457672}
-  m_SizeDelta: {x: 246.3022, y: 0}
+  m_AnchoredPosition: {x: 0, y: -24.23451}
+  m_SizeDelta: {x: 260, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &7476966380201551112
 CanvasRenderer:
@@ -2339,11 +2339,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 22
+    m_FontSize: 19
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 2
-    m_MaxSize: 73
+    m_MinSize: 0
+    m_MaxSize: 200
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2532,7 +2532,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0.00003305049, y: -0.00068443303}
+  m_AnchoredPosition: {x: 0.00003305049, y: 0.000001934464}
   m_SizeDelta: {x: 828.03, y: 571.74}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7476966380604339061

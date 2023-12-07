@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AnimationEvent : MonoBehaviour
 {
+    public SoundRequest soundRequest;
+
     private Animator animator;
     private Rigidbody2D r2d;
     private BoxCollider2D box2d;
@@ -15,9 +17,9 @@ public class AnimationEvent : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
-        r2d = transform.parent.GetComponent<Rigidbody2D>();
-        box2d = transform.parent.GetComponent<BoxCollider2D>();
-        userController = transform.parent.GetComponent<UserController>();
+        r2d = GetComponent<Rigidbody2D>();
+        box2d = GetComponent<BoxCollider2D>();
+        userController = GetComponent<UserController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         initGravity = r2d.gravityScale;
@@ -37,6 +39,7 @@ public class AnimationEvent : MonoBehaviour
     /// </summary>
     void OnJump()
     {
+        r2d.simulated = true;
         r2d.velocity = new Vector2(0, 25);
     }
 
@@ -45,25 +48,39 @@ public class AnimationEvent : MonoBehaviour
     /// </summary>
     void OnDash()
     {
+        soundRequest.PlaySound("Dash");
+
         r2d.gravityScale = 0;
         box2d.enabled = false;
 
-        int forceDir = spriteRenderer.flipX ? 1 : -1;
+        int forceDir = spriteRenderer.flipX ? -1 : 1;
         r2d.velocity = new Vector2(13 * forceDir, 0);
     }
 
     /// <summary>
     /// 停止翻滾(閃躲)
     /// </summary>
-    void StopDash()
+    public void StopDash()
     {
         animator.SetBool(AnimatorHash.IsDash, false);
-        if (userController)
-        {
-            r2d.gravityScale = initGravity;
-            box2d.enabled = true;
-            userController.StopDash();
-        }
+
+        r2d.gravityScale = initGravity;
+        box2d.enabled = true;
+
+        if (userController) userController.StopDash();
+    }
+
+    /// <summary>
+    /// 攻擊
+    /// </summary>
+    void OnAttack()
+    {
+        soundRequest.PlaySound("Attack");
+
+        int forceDir = spriteRenderer.flipX ? -1 : 1;
+        r2d.velocity = new Vector2(5 * forceDir, 0);
+
+        if (userController) userController.OpenAttackBox();
     }
 
     /// <summary>
@@ -85,13 +102,14 @@ public class AnimationEvent : MonoBehaviour
     }
 
     /// <summary>
-    /// 攻擊
+    /// 受傷
     /// </summary>
-    void OnAttack()
+    public void Hurt()
     {
-        int forceDir = spriteRenderer.flipX ? 1 : -1;
-        r2d.velocity = new Vector2(5 * forceDir, 0);
+        soundRequest.PlaySound("Hurt");
 
-        if (userController) userController.OpenAttackBox();
+        animator.SetTrigger(AnimatorHash.Hurt_Tr);
+        if (userController) userController.OnHurt();
     }
+
 }

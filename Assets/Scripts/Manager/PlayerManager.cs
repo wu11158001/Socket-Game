@@ -43,11 +43,14 @@ public class PlayerManager : BaseManager
             r2d.gravityScale = 10;
             r2d.freezeRotation = true;
 
-            UpdateCharacterState body = obj.AddComponent<UpdateCharacterState>();
+            UpdateCharacterState role = obj.AddComponent<UpdateCharacterState>();
+            SoundRequest soundRequest = obj.AddComponent<SoundRequest>();
+
+            obj.AddComponent<AnimationEvent>().soundRequest = soundRequest;
 
             //創建本地角色
             if (player.PlayerName.Equals(gameFace.UserName))
-            {
+            {                
                 //標記
                 GameObject gemObj = GameObject.Instantiate(gem);
                 gemObj.transform.SetParent(obj.transform);
@@ -70,9 +73,9 @@ public class PlayerManager : BaseManager
             }
 
             obj.name = player.PlayerName;
-            body.userName = player.PlayerName;
+            role.userName = player.PlayerName;
 
-            playerDic.Add(player.PlayerName, body);
+            playerDic.Add(player.PlayerName, role);
         }
     }
 

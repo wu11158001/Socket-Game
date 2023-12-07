@@ -7,11 +7,10 @@ public class StartPanel : BasePanel
 {
     [SerializeField] private Button startBtn;
     [SerializeField] private Text start_Txt;
-    [SerializeField] private CanvasGroup canvasGroup;
 
-    private float flickerInterval = 1.0f;
-    private float fadeDuration = 1.0f;
+    private float fadeDuration = 0.85f;
 
+    private float textAhpha;
 
     /// <summary>
     /// UI面板開始
@@ -69,13 +68,14 @@ public class StartPanel : BasePanel
     {
         startBtn.onClick.AddListener(StartBtnClick);
 
-        InvokeRepeating("ToggleTextVisibility", 0f, flickerInterval);
         StartCoroutine(FadeText());
     }
 
     private void Update()
     {
-        start_Txt.color = new Color(start_Txt.color.r, start_Txt.color.g, start_Txt.color.b, canvasGroup.alpha);
+        start_Txt.color = new Color(start_Txt.color.r, start_Txt.color.g, start_Txt.color.b, textAhpha);
+
+        if (Input.anyKeyDown) StartBtnClick();
     }
 
     /// <summary>
@@ -84,11 +84,6 @@ public class StartPanel : BasePanel
     void StartBtnClick()
     {
         uiManager.PushPanel(PanelType.Login);
-    }
-
-    private void ToggleTextVisibility()
-    {
-       
     }
 
     private IEnumerator FadeText()
@@ -106,7 +101,7 @@ public class StartPanel : BasePanel
         float elapsedTime = 0f;
         while (elapsedTime < fadeDuration)
         {
-            canvasGroup.alpha = Mathf.Lerp(0f, 1f, elapsedTime / fadeDuration);
+            textAhpha = Mathf.Lerp(0f, 1f, elapsedTime / fadeDuration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -117,7 +112,7 @@ public class StartPanel : BasePanel
         float elapsedTime = 0f;
         while (elapsedTime < fadeDuration)
         {
-            canvasGroup.alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
+            textAhpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }

@@ -79,7 +79,19 @@ public class LoginPanel : BasePanel
         }
     }
 
-    
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            OnLogonClick();
+        }
+
+        if (acc_IF.isFocused && Input.GetKeyDown(KeyCode.Tab))
+        {
+            psw_IF.ActivateInputField();
+        }
+    }
+
     /// <summary>
     /// 按下登入
     /// </summary>

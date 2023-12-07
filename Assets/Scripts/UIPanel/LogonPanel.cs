@@ -69,6 +69,19 @@ public class LogonPanel : BasePanel
         switchlogin_Btn.onClick.AddListener(OnSwitchLoginClick);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            OnLogonClick();
+        }
+
+        if (acc_IF.isFocused && Input.GetKeyDown(KeyCode.Tab))
+        {
+            psw_IF.ActivateInputField();
+        }
+    }
+
     /// <summary>
     /// 按下註冊
     /// </summary>

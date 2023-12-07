@@ -21,7 +21,7 @@ public class AttackBox : MonoBehaviour
         attackRequest = GetComponent<AttackRequest>();
 
         box2D = GetComponent<BoxCollider2D>();
-        self = transform.parent.GetComponent<UpdateCharacterState>();
+        self = GetComponent<UpdateCharacterState>();
 
         initPosX = box2D.offset.x;
         box2D.enabled = false;
@@ -35,8 +35,8 @@ public class AttackBox : MonoBehaviour
     {
         hitList.Clear();
 
-        if (dir) box2D.offset = new Vector2(initPosX, box2D.offset.y);
-        else box2D.offset = new Vector2(-initPosX, box2D.offset.y);
+        if (dir) box2D.offset = new Vector2(-initPosX, box2D.offset.y);
+        else box2D.offset = new Vector2(initPosX, box2D.offset.y);
 
         box2D.enabled = true;
 

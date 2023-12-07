@@ -6,18 +6,22 @@ using SocketGameProtobuf;
 
 public class RoomListPanel : BasePanel
 {
-    public Button logout_Btn, serch_Btn, create_Btn, joinRoom_Btn;
-    public InputField createName_IF, joinRoom_IF;
-    public Slider count_Sli;
-    public Text count_Txt;
+    [SerializeField] private Button logout_Btn, serch_Btn, create_Btn, joinRoom_Btn, sound_Btn, music_Btn;
+    [SerializeField] private InputField createName_IF, joinRoom_IF;
+    [SerializeField] private Slider count_Sli;
+    [SerializeField] private Text count_Txt;
+    [SerializeField] private Image sound_Img, music_Img;
+    [SerializeField] private Sprite soundOpen, soundClose, musicOpen, musicClose;
 
-    public Transform roomListTransform;
-    public GameObject roomIten;
+    [SerializeField] private Transform roomListTransform;
+    [SerializeField] private GameObject roomIten;
 
-    public LogoutRequest logoutRequest;
-    public CreateRoomRequest createRoomRequest;
-    public SearchRoomRequest serchRoomRequest;
-    public JoinRoomRequest joinRoomRequest;
+    [SerializeField] private LogoutRequest logoutRequest;
+    [SerializeField] private CreateRoomRequest createRoomRequest;
+    [SerializeField] private SearchRoomRequest serchRoomRequest;
+    [SerializeField] private JoinRoomRequest joinRoomRequest;
+
+    [SerializeField] private bool isSound = true, isMusic = true;
 
     /// <summary>
     /// UI面板開始
@@ -86,6 +90,27 @@ public class RoomListPanel : BasePanel
         create_Btn.onClick.AddListener(OnCreateClick);
         joinRoom_Btn.onClick.AddListener(delegate { JoinRoom(joinRoom_IF.text); });
         count_Sli.onValueChanged.AddListener((val => { count_Txt.text = $"{val}人"; }));
+        sound_Btn.onClick.AddListener(() =>
+        {
+            isSound = !isSound;
+            sound_Img.sprite = isSound ? soundOpen : soundClose;
+            gameFace.SoundSwitch(isSound, isMusic);
+        });
+        music_Btn.onClick.AddListener(() =>
+        {
+            isMusic = !isMusic;
+            music_Img.sprite = isMusic ? musicOpen : musicClose;
+            gameFace.SoundSwitch(isSound, isMusic);
+        });
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            if(createName_IF.isFocused) OnCreateClick();
+            if (joinRoom_IF.isFocused) JoinRoom(joinRoom_IF.text);
+        }
     }
 
     /// <summary>
@@ -112,6 +137,8 @@ public class RoomListPanel : BasePanel
     {
         if(createName_IF.text == "") createName_IF.text = gameFace.UserName;
         createRoomRequest.SendRequest(createName_IF.text, (int)count_Sli.value);
+
+        createName_IF.text = "";
     }
 
     /// <summary>
@@ -184,6 +211,8 @@ public class RoomListPanel : BasePanel
     public void JoinRoom(string roomName)
     {
         joinRoomRequest.SendRequest(roomName);
+
+        joinRoom_IF.text = "";
     }
 
     /// <summary>

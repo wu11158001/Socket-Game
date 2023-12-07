@@ -19,6 +19,7 @@ public class GameFace : MonoBehaviour
     private RequestManager requestManager;
     private UIManager uIManager;
     private PlayerManager playerManager;
+    private SoundManager soundManager;
 
     public string UserName { get; set; }
 
@@ -32,11 +33,13 @@ public class GameFace : MonoBehaviour
         clientManager = new ClientManager(this);
         requestManager = new RequestManager(this);
         playerManager = new PlayerManager(this);
+        soundManager = new SoundManager(this);
 
         uIManager.OnInit();
         clientManager.OnInit();
         requestManager.OnInit();
         playerManager.OnInit();
+        soundManager.OnInit();
     }
 
     /// <summary>
@@ -157,6 +160,34 @@ public class GameFace : MonoBehaviour
     public void GameResult(MainPack pack)
     {
         playerManager.GameResult(pack);
+    }
+
+    /// <summary>
+    /// 播放音效
+    /// </summary>
+    /// <param name="clipName"></param>
+    public void PlaySound(string clipName)
+    {
+        soundManager.PlaySound(clipName);
+    }
+
+    /// <summary>
+    /// 播放音樂
+    /// </summary>
+    /// <param name="clipName"></param>
+    public void PlayBGM(string clipName)
+    {
+        soundManager.PlayBGM(clipName);
+    }
+
+    /// <summary>
+    /// 音樂/音效開關
+    /// </summary>
+    /// <param name="isSound">音效</param>
+    /// <param name="isMusic">音樂</param>
+    public void SoundSwitch(bool isSound, bool isMusic)
+    {
+        soundManager.SoundSwitch(isSound, isMusic);
     }
 
     private void OnDestroy()
