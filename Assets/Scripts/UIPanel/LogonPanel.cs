@@ -53,6 +53,8 @@ public class LogonPanel : BasePanel
     void Entter()
     {
         gameObject.SetActive(true);
+        acc_IF.text = "";
+        psw_IF.text = "";
     }
 
     /// <summary>
