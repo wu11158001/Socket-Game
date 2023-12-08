@@ -120,6 +120,9 @@ public class LoginPanel : BasePanel
         PlayerPrefs.SetString("StockGame_Acc", acc);
         PlayerPrefs.SetString("StockGame_Psw", psw);
 
+        acc_IF.text = acc;
+        psw_IF.text = psw;
+
         loginRequest.SendRequest(acc, psw);
     }
 
