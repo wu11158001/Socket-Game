@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class AnimationEvent : MonoBehaviour
 {
-    public SoundRequest soundRequest;
-
+    private SoundRequest soundRequest;
     private UserController userController;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     private AnimatorStateInfo stateInfo;
-    private AnimationEvent animationEvent;
     private Rigidbody2D r2d;
     private BoxCollider2D box2d;
+
+    private SpriteRenderer dashEffect;
 
     private float initGravity;
     public string userName;
@@ -25,12 +25,15 @@ public class AnimationEvent : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        userController = GetComponent<UserController>();
-        animationEvent = GetComponent<AnimationEvent>();
-        animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        r2d = GetComponent<Rigidbody2D>();
         box2d = GetComponent<BoxCollider2D>();
+
+        userController = transform.parent.GetComponent<UserController>();
+        soundRequest = transform.parent.GetComponent<SoundRequest>();
+        r2d = transform.parent.GetComponent<Rigidbody2D>();   
+
+        dashEffect = transform.parent.Find("DashEffect").GetComponent<SpriteRenderer>();
+        dashEffect.gameObject.SetActive(false);
 
         initGravity = r2d.gravityScale;
     }
@@ -44,21 +47,21 @@ public class AnimationEvent : MonoBehaviour
         {
             if (animator.GetBool(AnimatorHash.IsRun))
             {
-                int dir = spriteRenderer.flipX ? -1 : 1;
-                transform.position = new Vector3(transform.position.x + 10 * dir * Time.deltaTime, transform.position.y, transform.position.z);
+                int dir = spriteRenderer.flipX ? 1 : -1;
+                transform.parent.position = new Vector3(transform.parent.position.x + 10 * dir * Time.deltaTime, transform.parent.position.y, transform.parent.position.z);
             }
         }
 
         //動畫完畢執行
         if (stateInfo.normalizedTime >= 1f)
         {
-            if (animator.GetBool(AnimatorHash.IsAttack)) animationEvent.StopAttack();
-            if (animator.GetBool(AnimatorHash.IsJumpAttack)) animationEvent.StopJumpAttack();
+            if (animator.GetBool(AnimatorHash.IsAttack)) StopAttack();
+            if (animator.GetBool(AnimatorHash.IsDash)) StopDash();
         }
 
         //限制移動範圍
-        if (transform.position.x > limitPosX) transform.position = new Vector2(limitPosX, transform.position.y);
-        else if (transform.position.x < -limitPosX) transform.position = new Vector2(-limitPosX, transform.position.y);
+        if (transform.parent.position.x > limitPosX) transform.parent.position = new Vector2(limitPosX, transform.parent.position.y);
+        else if (transform.parent.position.x < -limitPosX) transform.parent.position = new Vector2(-limitPosX, transform.parent.position.y);
     }
 
     /// <summary>
@@ -74,22 +77,22 @@ public class AnimationEvent : MonoBehaviour
     /// <summary>
     /// 更新動畫
     /// </summary>
-    /// <param name="aniName">動畫名稱</param>
+    /// <param name="aniHash">動畫Hash</param>
     /// <param name="dir">面相方向(true=右)</param>
     /// <param name="isActive">動畫bool</param>
-    public void UpdateAni(string aniName, bool dir, bool isActive)
+    public void UpdateAni(int aniHash, bool dir, bool isActive)
     {
         spriteRenderer.flipX = dir;
 
-        if (aniName == "Hurt_Tr" || aniName == "Die_Tr" || aniName == "Win_Tr")
+        if (aniHash == AnimatorHash.Hurt_Tr || aniHash == AnimatorHash.Die_Tr || aniHash == AnimatorHash.Win_Tr)
         {
-            animator.SetTrigger(aniName);
+            animator.SetTrigger(aniHash);
             return;
         }
 
-        animator.SetBool(aniName, isActive);
+        animator.SetBool(aniHash, isActive);
 
-        if (aniName == "IsDash" && isActive == false) animationEvent.StopDash();
+        if (aniHash == AnimatorHash.IsDash && isActive == false) StopDash();
     }
 
     /// <summary>
@@ -98,7 +101,7 @@ public class AnimationEvent : MonoBehaviour
     public void PlayIdle()
     {
         animator.Play(AnimatorHash.IsIdle);
-        if (userController) userController.HurtOver();
+        if (userController) userController.isHurt = false;
     }
 
     /// <summary>
@@ -106,7 +109,6 @@ public class AnimationEvent : MonoBehaviour
     /// </summary>
     void OnJump()
     {
-        r2d.simulated = true;
         r2d.velocity = new Vector2(0, 25);
     }
 
@@ -117,10 +119,17 @@ public class AnimationEvent : MonoBehaviour
     {
         soundRequest.PlaySound("Dash");
 
+        dashEffect.gameObject.SetActive(true);
+        float effPosX = spriteRenderer.flipX ? -0.6f : 0.6f;
+        float effPosY = -1.03f;
+        dashEffect.transform.localPosition = new Vector2(effPosX, effPosY);
+
+        dashEffect.flipX = !spriteRenderer.flipX;
+
         r2d.gravityScale = 0;
         box2d.enabled = false;
 
-        int forceDir = spriteRenderer.flipX ? -1 : 1;
+        int forceDir = spriteRenderer.flipX ? 1 : -1;
         r2d.velocity = new Vector2(13 * forceDir, 0);
     }
 
@@ -131,10 +140,12 @@ public class AnimationEvent : MonoBehaviour
     {
         animator.SetBool(AnimatorHash.IsDash, false);
 
+        dashEffect.gameObject.SetActive(false);
+
         r2d.gravityScale = initGravity;
         box2d.enabled = true;
 
-        if (userController) userController.StopDash();
+        if (userController) userController.isDash = false;
     }
 
     /// <summary>
@@ -144,7 +155,7 @@ public class AnimationEvent : MonoBehaviour
     {
         soundRequest.PlaySound("Attack");
 
-        int forceDir = spriteRenderer.flipX ? -1 : 1;
+        int forceDir = spriteRenderer.flipX ? 1 : -1;
         r2d.velocity = new Vector2(5 * forceDir, 0);
 
         if (userController) userController.OpenAttackBox();
@@ -156,7 +167,7 @@ public class AnimationEvent : MonoBehaviour
     public void StopAttack()
     {
         animator.SetBool(AnimatorHash.IsAttack, false);
-        if (userController) userController.StopAttack();
+        if (userController) userController.isAttack = false;
     }
 
     /// <summary>
@@ -164,8 +175,8 @@ public class AnimationEvent : MonoBehaviour
     /// </summary>
     public void StopJumpAttack()
     {
-        animator.SetBool(AnimatorHash.IsJumpAttack, false);
-        if (userController) userController.StopJumpAttack();
+        animator.SetBool(AnimatorHash.IsAttack, false);
+        if (userController) userController.isAttack = false;
     }
 
     /// <summary>
@@ -176,7 +187,7 @@ public class AnimationEvent : MonoBehaviour
         soundRequest.PlaySound("Hurt");
 
         animator.SetTrigger(AnimatorHash.Hurt_Tr);
-        if (userController) userController.OnHurt();
+        if (userController) userController.isHurt = true;
     }
 
     /// <summary>
@@ -197,11 +208,26 @@ public class AnimationEvent : MonoBehaviour
     {
         isActionable = false;
 
-        string triggerName = result ? "Win_Tr" : "Die_Tr";
         string clip = result ? "Win" : "Fail";
         soundRequest.PlaySound(clip);
-        animator.SetTrigger(triggerName);
 
-        if (userController) userController.GameOver(triggerName);
-}
+        int triggerHash = result ? AnimatorHash.Win_Tr : AnimatorHash.Die_Tr;
+        animator.SetTrigger(triggerHash);
+        if (userController) userController.GameOver(triggerHash);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (animator.GetBool(AnimatorHash.IsJump))
+        {
+            animator.SetBool(AnimatorHash.IsJump, false);
+            if (userController) userController.isFloor = true;
+
+            if (animator.GetBool(AnimatorHash.IsAttack))
+            {
+                animator.SetBool(AnimatorHash.IsAttack, false);
+                if (userController) userController.isAttack = false;
+            }
+        }
+    }
 }

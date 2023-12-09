@@ -112,7 +112,7 @@ public class GamePanel : BasePanel
             {
                 if (!gameFace.GetPlayers().TryGetValue(item.Key, out AnimationEvent animationEvent)) return;
 
-                Vector3 viewportPos = mainCamera.WorldToViewportPoint(gameFace.GetPlayers()[item.Key].transform.position);
+                Vector3 viewportPos = mainCamera.WorldToViewportPoint(gameFace.GetPlayers()[item.Key].transform.parent.position);
 
                 //判斷是否在視野內 && 是否可行動
                 if ((viewportPos.x > 0 && viewportPos.x < 1))
@@ -123,7 +123,7 @@ public class GamePanel : BasePanel
                     //頭頂訊息物件
                     headInfoDic[item.Key].gameObject.SetActive(true);
                     float headInfoPosX = (canvasRect.rect.width * viewportPos.x) - (canvasRect.rect.width / 2);
-                    float headInfoPosY = ((canvasRect.rect.height * viewportPos.y) - (canvasRect.rect.height / 2)) + 46;
+                    float headInfoPosY = ((canvasRect.rect.height * viewportPos.y) - (canvasRect.rect.height / 2)) + 25;
                     headInfoDic[item.Key].SetPos(new Vector2(headInfoPosX, headInfoPosY));
                 }
                 else
@@ -169,10 +169,9 @@ public class GamePanel : BasePanel
     /// </summary>
     public void OnExitGameClick()
     {
-        gameFace.ButtonClick();
-
-        gameExitRequest.SendRequest();
-        gameFace.PlayBGM("Hall");        
+        gameFace.SoundButtonClick();
+        gameFace.PlayBGM("Hall");
+        gameExitRequest.SendRequest();                
         gameFace.LeaveGame();
     }
 

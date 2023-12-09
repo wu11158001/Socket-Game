@@ -40,6 +40,8 @@ public class GameFace : MonoBehaviour
         requestManager.OnInit();
         playerManager.OnInit();
         soundManager.OnInit();
+
+        bg.SetActive(true);
     }
 
     /// <summary>
@@ -121,7 +123,6 @@ public class GameFace : MonoBehaviour
     /// </summary>
     public void LeaveGame()
     {
-        uIManager.ShowTip($"");
         SetBgActive = true;
         playerManager.LeaveGame();
         uIManager.PopPanel();
@@ -167,7 +168,7 @@ public class GameFace : MonoBehaviour
     /// <summary>
     /// 按鈕點擊音效
     /// </summary>
-    public void ButtonClick()
+    public void SoundButtonClick()
     {
         soundManager.ButtonClick();
     }

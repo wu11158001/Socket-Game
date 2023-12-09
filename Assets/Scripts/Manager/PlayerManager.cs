@@ -14,6 +14,7 @@ public class PlayerManager : BaseManager
     private GameObject[] characters;//角色物件
     private GameObject attackBox;//攻擊框
     private GameObject gem;//本地玩家標記
+    private GameObject deshEffect;//翻滾特效
 
     public override void OnInit()
     {
@@ -22,6 +23,7 @@ public class PlayerManager : BaseManager
         characters = Resources.LoadAll<GameObject>("Prefab/Characters");
         attackBox = Resources.Load<GameObject>("Prefab/AttackBox");
         gem = Resources.Load<GameObject>("Prefab/Gem");
+        deshEffect = Resources.Load<GameObject>("Prefab/DashEffect");
     }
 
     /// <summary>
@@ -42,14 +44,19 @@ public class PlayerManager : BaseManager
             Rigidbody2D r2d = obj.AddComponent<Rigidbody2D>();
             r2d.gravityScale = 10;
             r2d.freezeRotation = true;
-            
+
+            //翻滾特效
+            GameObject deshEff = GameObject.Instantiate(deshEffect);
+            deshEff.transform.SetParent(obj.transform);
+            deshEff.transform.localPosition = new Vector3(0, -0.7f, 0);
+            deshEff.name = "DashEffect";
+
             SoundRequest soundRequest = obj.AddComponent<SoundRequest>();
-            AnimationEvent animationEvent = obj.AddComponent<AnimationEvent>();
-            animationEvent.soundRequest = soundRequest;
+            AnimationEvent animationEvent = obj.transform.Find("Body").gameObject.AddComponent<AnimationEvent>();
 
             //創建本地角色
             if (player.PlayerName.Equals(gameFace.UserName))
-            {                
+            {
                 //標記
                 GameObject gemObj = GameObject.Instantiate(gem);
                 gemObj.transform.SetParent(obj.transform);
@@ -86,7 +93,7 @@ public class PlayerManager : BaseManager
     {
         if (playerDic.TryGetValue(name, out AnimationEvent obj))
         {
-            GameObject.Destroy(obj.gameObject);
+            GameObject.Destroy(obj.transform.parent.gameObject);
             playerDic.Remove(name);
         }
         else
@@ -100,9 +107,9 @@ public class PlayerManager : BaseManager
     /// </summary>
     public void LeaveGame()
     {
-        foreach (var c in playerDic.Values)
+        foreach (var player in playerDic.Values)
         {
-            GameObject.Destroy(c.gameObject);
+            GameObject.Destroy(player.transform.parent.gameObject);
         }
         playerDic.Clear();
     }
@@ -130,10 +137,10 @@ public class PlayerManager : BaseManager
         AniPack aniPack = pack.PlayerPack[0].AniPack;
         if (playerDic.TryGetValue(pack.PlayerPack[0].PlayerName, out AnimationEvent obj))
         {
-            string aniName = aniPack.AnimationName;
+            int aniHash = aniPack.AniHash;
             bool isActive = aniPack.IsActive;
             bool dir = aniPack.Direction;
-            obj.UpdateAni(aniName, dir, isActive);
+            obj.UpdateAni(aniHash, dir, isActive);
         }
     }
 

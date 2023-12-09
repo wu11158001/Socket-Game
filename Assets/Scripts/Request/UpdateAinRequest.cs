@@ -26,16 +26,16 @@ public class UpdateAinRequest : BaseRequest
     /// <summary>
     /// 發送動畫協議
     /// </summary>
-    /// <param name="aniName">動畫名稱</param>
+    /// <param name="aniHash">動畫名稱</param>
     /// <param name="dir">面相方向(true=右)</param>
     /// <param name="isActive">動畫bool</param>
-    public void SendRequest(string aniName, bool dir, bool isActive)
+    public void SendRequest(int aniHash, bool dir, bool isActive)
     {
         MainPack pack = new MainPack();
         AniPack aniPack = new AniPack();
         PlayerPack playerPack = new PlayerPack();
 
-        aniPack.AnimationName = aniName;
+        aniPack.AniHash = aniHash;
         aniPack.IsActive = isActive;
         aniPack.Direction = dir;
 
@@ -45,6 +45,7 @@ public class UpdateAinRequest : BaseRequest
         pack.PlayerPack.Add(playerPack);
         pack.RequestCode = requestCode;
         pack.ActionCode = actionCode;
+        pack.Str = $"{aniHash} = {isActive}";
 
         base.SendRequest(pack);
     }

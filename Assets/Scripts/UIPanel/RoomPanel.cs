@@ -94,7 +94,7 @@ public class RoomPanel : BasePanel
     /// </summary>
     void OnLeaveClick()
     {
-        gameFace.ButtonClick();
+        gameFace.SoundButtonClick();
         roomExitRequest.SendRequest();
     }
 
@@ -111,7 +111,7 @@ public class RoomPanel : BasePanel
     /// </summary>
     void OnSendClick()
     {
-        gameFace.ButtonClick();
+        gameFace.SoundButtonClick();
 
         if (chat_IF.text == "")
         {
@@ -120,7 +120,7 @@ public class RoomPanel : BasePanel
         }
 
         chatRequest.SendRequest(chat_IF.text);
-        chat_Txt.text += $"<color=#E254DB>自己:{chat_IF.text.Trim()}</color>\n";
+        chat_Txt.text += $"<color=#329800>自己:{chat_IF.text.Trim()}</color>\n";
         chat_IF.text = "";
         chat_Sb.value = 0;
     }
@@ -131,7 +131,7 @@ public class RoomPanel : BasePanel
     /// <param name="str">聊天內容</param>
     public void ChatResponse(string str)
     {
-        chat_Txt.text += $"<color=#594949>{str}</color>\n";
+        chat_Txt.text += $"<color=#594949>{str.Trim()}</color>\n";
         chat_Sb.value = 0;
     }
 
@@ -183,7 +183,7 @@ public class RoomPanel : BasePanel
     /// </summary>
     void OnStartClick()
     {
-        gameFace.ButtonClick();
+        gameFace.SoundButtonClick();
         startGameRequest.SendRequest();
     }
 

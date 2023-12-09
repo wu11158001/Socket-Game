@@ -61,6 +61,7 @@ public class UserItem : MonoBehaviour
         }
 
         avatar_Img.sprite = selectAvatar[characterIndex];
+        curIndex = characterIndex;
 
         selectLeft_Btn.gameObject.SetActive(isSelf);
         selectRight_Btn.gameObject.SetActive(isSelf);

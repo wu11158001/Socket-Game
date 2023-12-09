@@ -89,7 +89,7 @@ public class LogonPanel : BasePanel
     /// </summary>
     void OnLogonClick()
     {
-        gameFace.ButtonClick();
+        gameFace.SoundButtonClick();
 
         //防呆
         if (acc_IF.text == "" || psw_IF.text == "")
@@ -113,7 +113,7 @@ public class LogonPanel : BasePanel
     /// </summary>
     void OnSwitchLoginClick()
     {
-        gameFace.ButtonClick();
+        gameFace.SoundButtonClick();
         uiManager.PopPanel();
     }
 
@@ -126,7 +126,7 @@ public class LogonPanel : BasePanel
         switch (pack.ReturnCode)
         {
             case ReturnCode.Succeed:
-                uiManager.ShowTip("註冊成功");
+                //uiManager.ShowTip("註冊成功");
                 LoginPanel loginPanel = uiManager.PushPanel(PanelType.Login).GetComponent<LoginPanel>();
 
                 //登入

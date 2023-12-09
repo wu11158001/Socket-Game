@@ -88,14 +88,14 @@ public class RoomListPanel : BasePanel
         logout_Btn.onClick.AddListener(OnLogoutClick);
         serch_Btn.onClick.AddListener(() => 
         {
-            gameFace.ButtonClick();
+            gameFace.SoundButtonClick();
             OnSearchClick(); 
         });
         create_Btn.onClick.AddListener(OnCreateClick);
         joinRoom_Btn.onClick.AddListener(delegate { JoinRoom(joinRoom_IF.text); });
         count_Sli.onValueChanged.AddListener((val => 
         {
-            gameFace.ButtonClick(); 
+            gameFace.SoundButtonClick(); 
             count_Txt.text = $"{val}人"; }
         ));
         sound_Btn.onClick.AddListener(() =>
@@ -103,14 +103,14 @@ public class RoomListPanel : BasePanel
             isSound = !isSound;
             sound_Img.sprite = isSound ? soundOpen : soundClose;
             gameFace.SoundSwitch(isSound, isMusic);
-            gameFace.ButtonClick();
+            gameFace.SoundButtonClick();
         });
         music_Btn.onClick.AddListener(() =>
         {
             isMusic = !isMusic;
             music_Img.sprite = isMusic ? musicOpen : musicClose;
             gameFace.SoundSwitch(isSound, isMusic);
-            gameFace.ButtonClick();
+            gameFace.SoundButtonClick();
         });
     }
 
@@ -128,7 +128,7 @@ public class RoomListPanel : BasePanel
     /// </summary>
     void OnLogoutClick()
     {
-        gameFace.ButtonClick();
+        gameFace.SoundButtonClick();
         logoutRequest.SendRequest();
         uiManager.PopPanel();        
     }
@@ -146,10 +146,10 @@ public class RoomListPanel : BasePanel
     /// </summary>
     void OnCreateClick()
     {
-        gameFace.ButtonClick();
+        gameFace.SoundButtonClick();
 
         if (createName_IF.text == "") createName_IF.text = gameFace.UserName;
-        createRoomRequest.SendRequest(createName_IF.text, (int)count_Sli.value);
+        createRoomRequest.SendRequest(createName_IF.text.Trim(), (int)count_Sli.value);
 
         createName_IF.text = "";
     }
@@ -227,9 +227,9 @@ public class RoomListPanel : BasePanel
     public void JoinRoom(string roomName)
     {
 
-        joinRoomRequest.SendRequest(roomName);
+        joinRoomRequest.SendRequest(roomName.Trim());
 
-        gameFace.ButtonClick();
+        gameFace.SoundButtonClick();
         joinRoom_IF.text = "";
     }
 

@@ -97,7 +97,7 @@ public class LoginPanel : BasePanel
     /// </summary>
     void OnLogonClick()
     {
-        gameFace.ButtonClick();
+        gameFace.SoundButtonClick();
 
         //防呆
         if (acc_IF.text == "" || psw_IF.text == "")
@@ -132,7 +132,7 @@ public class LoginPanel : BasePanel
     /// </summary>
     void OnSwitchLogonClick()
     {
-        gameFace.ButtonClick();
+        gameFace.SoundButtonClick();
         uiManager.PushPanel(PanelType.Logon);
     }
 

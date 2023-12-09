@@ -6,28 +6,30 @@ public class UserController : MonoBehaviour
 {
     private Camera mainCamera;
     private Animator animator;
-    private SpriteRenderer body;
+    private SpriteRenderer spriteRenderer;
 
     private AttackBox attackBox;
-    private AnimationEvent updateCharacterState;
+    private AnimationEvent animationEvent;
     private UpdatePosRequest updatePosRequest;
     private UpdateAinRequest updateAniRequest;
 
-    [SerializeField] private bool isRun;
-    [SerializeField] private bool isFloor;
-    [SerializeField] private bool isAttack;
-    [SerializeField] private bool isDash;
-    [SerializeField] private bool isHurt;
+    public bool isRun;
+    public bool isFloor;
+    public bool isAttack;
+    public bool isDash;
+    public bool isHurt;
     [SerializeField] private bool isGameOver;
 
     private void Start()
     {
         mainCamera = Camera.main;
-        animator = GetComponent<Animator>();
-        body = GetComponent<SpriteRenderer>();
-        attackBox = GetComponentInChildren<AttackBox>();
+        Transform body = transform.Find("Body");
 
-        updateCharacterState = GetComponent<AnimationEvent>();
+        animator = body.GetComponent<Animator>();
+        spriteRenderer = body.GetComponent<SpriteRenderer>();
+        animationEvent = body.GetComponent<AnimationEvent>();
+
+        attackBox = GetComponentInChildren<AttackBox>();       
         updatePosRequest = GetComponent<UpdatePosRequest>();
         updateAniRequest = GetComponent<UpdateAinRequest>();
 
@@ -57,13 +59,13 @@ public class UserController : MonoBehaviour
     /// <summary>
     /// 設定動畫
     /// </summary>
-    /// <param name="aniName">動畫名稱</param>
+    /// <param name="aniHash">動畫Hash</param>
     /// <param name="dir">面相方向(true=右)</param>
     /// <param name="isActive">動畫bool</param>
-    void SetAni(string aniName, bool dir, bool isActive = true)
+    void SetAni(int aniHash, bool dir, bool isActive = true)
     {
-        animator.SetBool(aniName, isActive);
-        updateAniRequest.SendRequest(aniName, dir, isActive);
+        animator.SetBool(aniHash, isActive);
+        updateAniRequest.SendRequest(aniHash, dir, isActive);
     }
 
     /// <summary>
@@ -75,115 +77,60 @@ public class UserController : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftArrow) && !isRun)
         {
             isRun = true;
-            body.flipX = true;
-            SetAni("IsRun", body.flipX);
+            spriteRenderer.flipX = false;
+            SetAni(AnimatorHash.IsRun, spriteRenderer.flipX);
         }
         //右
         if (Input.GetKey(KeyCode.RightArrow) && !isRun)
         {
             isRun = true;
-            body.flipX = false;
-            SetAni("IsRun", body.flipX);
+            spriteRenderer.flipX = true;
+            SetAni(AnimatorHash.IsRun, spriteRenderer.flipX);
         }
         //停止移動
         if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow))
         {
             isRun = false;
-            SetAni("IsRun", body.flipX, false);
+            SetAni(AnimatorHash.IsRun, spriteRenderer.flipX, false);
         }
 
         //跳躍
         if (Input.GetKeyDown(KeyCode.UpArrow) && isFloor && !isAttack)
         {
-            SetAni("IsJump", body.flipX);
+            SetAni(AnimatorHash.IsJump, spriteRenderer.flipX);
         }
 
         //翻滾(閃躲)
         if (Input.GetKeyDown(KeyCode.X) && isFloor && !isAttack)
         {
             isDash = true;
-            SetAni("IsDash", body.flipX);
+            SetAni(AnimatorHash.IsDash, spriteRenderer.flipX);
         }
 
         //攻擊
         if (Input.GetKeyDown(KeyCode.Z) && !isAttack && !isDash)
         {
             isAttack = true;
-            if (isFloor) SetAni("IsAttack", body.flipX);
-            else SetAni("IsJumpAttack", body.flipX);
+            SetAni(AnimatorHash.IsAttack, spriteRenderer.flipX);
         }
     }
-
-    /// <summary>
-    /// 停止翻滾(閃躲)
-    /// </summary>
-    public void StopDash()
-    {
-        isDash = false;
-    }
-
-    /// <summary>
-    /// 停止攻擊
-    /// </summary>
-    public void StopAttack()
-    {
-        isAttack = false;
-    }
-
-    /// <summary>
-    /// 停止跳躍攻擊
-    /// </summary>
-    public void StopJumpAttack()
-    {
-        isAttack = false;
-    }
-
+    
     /// <summary>
     /// 開啟攻擊框
     /// </summary>
     public void OpenAttackBox()
     {
-        attackBox.OpenBox(body.flipX);
-    }
-
-    /// <summary>
-    /// 受傷
-    /// </summary>
-    public void OnHurt()
-    {
-        isHurt = true;
-    }
-
-    /// <summary>
-    /// 受擊狀態結束
-    /// </summary>
-    public void HurtOver()
-    {
-        isHurt = false;
+        attackBox.OpenBox(spriteRenderer.flipX);
     }
 
     /// <summary>
     /// 遊戲結束
     /// </summary>
-    /// <param name="triggerName"></param>
-    public void GameOver(string triggerName)
+    /// <param name="aniHash"></param>
+    public void GameOver(int aniHash)
     {
         isGameOver = true;
-        updateAniRequest.SendRequest(triggerName, body.flipX, true);
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (!isFloor)
-        {
-            isFloor = true;
-            SetAni("IsJump", body.flipX, false);
-            if (isAttack)
-            {
-                isAttack = false;
-                SetAni("IsJumpAttack", body.flipX, false);
-            }
-        }
+        SetAni(aniHash, spriteRenderer.flipX);
     }
 
     private void OnCollisionStay2D(Collision2D collision)
