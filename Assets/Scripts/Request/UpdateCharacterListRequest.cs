@@ -27,8 +27,7 @@ public class UpdateCharacterListRequest : BaseRequest
                 case "UpdateCharacterListValue":
                     gamePanel.UpdateGameInfoListValue(pack);
                     break;
-                default:
-                    
+                default:                    
                     gamePanel.UpdateGameInfoList(pack);
                     gameFace.RemovePlayer(pack.Str);
                     break;

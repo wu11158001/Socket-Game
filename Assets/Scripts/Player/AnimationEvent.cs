@@ -10,14 +10,15 @@ public class AnimationEvent : MonoBehaviour
     private Animator animator;
     private AnimatorStateInfo stateInfo;
     private Rigidbody2D r2d;
-    private BoxCollider2D box2d;
+    private BoxCollider2D jumpBox2d;
+    private BoxCollider2D bodyBox2d;
 
     private SpriteRenderer dashEffect;
 
     private float initGravity;
     public string userName;
 
-    private float limitPosX = 17;//移動限制範圍
+    private float limitPosX = 16;//移動限制範圍
 
     private bool isActionable = true;//角色是否可行動
     public bool GetActionable { get { return isActionable; } }
@@ -26,11 +27,12 @@ public class AnimationEvent : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        box2d = GetComponent<BoxCollider2D>();
+        jumpBox2d = GetComponent<BoxCollider2D>();
 
         userController = transform.parent.GetComponent<UserController>();
         soundRequest = transform.parent.GetComponent<SoundRequest>();
-        r2d = transform.parent.GetComponent<Rigidbody2D>();   
+        r2d = transform.parent.GetComponent<Rigidbody2D>();
+        bodyBox2d = transform.parent.GetComponent<BoxCollider2D>();
 
         dashEffect = transform.parent.Find("DashEffect").GetComponent<SpriteRenderer>();
         dashEffect.gameObject.SetActive(false);
@@ -71,7 +73,7 @@ public class AnimationEvent : MonoBehaviour
     /// <param name="dir">面相方向(true=左)</param>
     public void UpdatePos(Vector2 pos)
     {
-        transform.position = pos;
+        transform.parent.position = pos;
     }
 
     /// <summary>
@@ -127,7 +129,7 @@ public class AnimationEvent : MonoBehaviour
         dashEffect.flipX = !spriteRenderer.flipX;
 
         r2d.gravityScale = 0;
-        box2d.enabled = false;
+        bodyBox2d.enabled = false;
 
         int forceDir = spriteRenderer.flipX ? 1 : -1;
         r2d.velocity = new Vector2(13 * forceDir, 0);
@@ -143,7 +145,7 @@ public class AnimationEvent : MonoBehaviour
         dashEffect.gameObject.SetActive(false);
 
         r2d.gravityScale = initGravity;
-        box2d.enabled = true;
+        bodyBox2d.enabled = true;
 
         if (userController) userController.isDash = false;
     }
@@ -197,7 +199,7 @@ public class AnimationEvent : MonoBehaviour
     {
         soundRequest.PlaySound("Die");
         Destroy(r2d);
-        Destroy(box2d);
+        Destroy(jumpBox2d);
     }
 
     /// <summary>

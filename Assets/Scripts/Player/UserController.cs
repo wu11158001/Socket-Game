@@ -18,7 +18,7 @@ public class UserController : MonoBehaviour
     public bool isAttack;
     public bool isDash;
     public bool isHurt;
-    [SerializeField] private bool isGameOver;
+    [SerializeField] private bool isActionable = true;
 
     private void Start()
     {
@@ -33,7 +33,7 @@ public class UserController : MonoBehaviour
         updatePosRequest = GetComponent<UpdatePosRequest>();
         updateAniRequest = GetComponent<UpdateAinRequest>();
 
-        InvokeRepeating(nameof(SendUpdatePosFun), 0.0f, 0.1f);
+        InvokeRepeating(nameof(SendUpdatePosFun), 0.5f, 0.1f);
     }
 
     private void Update()
@@ -41,7 +41,7 @@ public class UserController : MonoBehaviour
         //攝影機跟隨
         mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z);
 
-        if (!isHurt && !isGameOver)
+        if (!isHurt && isActionable)
         {
             InputContrl();
         }        
@@ -129,7 +129,7 @@ public class UserController : MonoBehaviour
     /// <param name="aniHash"></param>
     public void GameOver(int aniHash)
     {
-        isGameOver = true;
+        isActionable = false;
         SetAni(aniHash, spriteRenderer.flipX);
     }
 

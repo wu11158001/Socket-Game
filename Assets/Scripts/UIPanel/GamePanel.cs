@@ -153,9 +153,12 @@ public class GamePanel : BasePanel
         manualObj.SetActive(true);
 
         Color color = new Color(0, 0, 0, 1);
+        manualBg_Img.color = color;
+        yield return new WaitForSeconds(0.5f);
+
         while (color.a > 0)
         {
-            color.a -= 0.4f * Time.deltaTime;
+            color.a -= 0.5f * Time.deltaTime;
             manualBg_Img.color = color;
             yield return null;
         }
@@ -255,7 +258,7 @@ public class GamePanel : BasePanel
         foreach (var player in pack.PlayerPack[0].KillInfoPack.DeadList)
         {
             uiManager.ShowTip($"{attacker} 擊殺了 {player}");
-            await Task.Delay(3500);
+            await Task.Delay(3000);
         }  
     }
 

@@ -48,6 +48,7 @@ public class TipPanel : BasePanel
         tipText.CrossFadeAlpha(1, 0.05f, false);
         transform.SetSiblingIndex(100);
 
+        CancelInvoke(nameof(HodeTip));
         Invoke(nameof(HodeTip), 2.5f);
     }
 

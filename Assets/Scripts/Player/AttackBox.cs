@@ -19,9 +19,8 @@ public class AttackBox : MonoBehaviour
     private void Start()
     {
         attackRequest = GetComponent<AttackRequest>();
-
         box2D = GetComponent<BoxCollider2D>();
-        self = GetComponent<AnimationEvent>();
+        self = transform.parent.Find("Body").GetComponent<AnimationEvent>();
 
         initPosX = box2D.offset.x;
         box2D.enabled = false;
@@ -33,10 +32,8 @@ public class AttackBox : MonoBehaviour
     /// <param name="dir">面相方向(true=右)</param>
     public void OpenBox(bool dir)
     {
-        hitList.Clear();
-
-        if (dir) box2D.offset = new Vector2(-initPosX, box2D.offset.y);
-        else box2D.offset = new Vector2(initPosX, box2D.offset.y);
+        if (dir) box2D.offset = new Vector2(initPosX, box2D.offset.y);
+        else box2D.offset = new Vector2(-initPosX, box2D.offset.y);
 
         box2D.enabled = true;
 
@@ -50,7 +47,11 @@ public class AttackBox : MonoBehaviour
     {
         box2D.enabled = false;
 
-        if(hitList.Count > 0) attackRequest.SendRequest(hitList);
+        if (hitList.Count > 0)
+        {
+            attackRequest.SendRequest(hitList);
+            hitList.Clear();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

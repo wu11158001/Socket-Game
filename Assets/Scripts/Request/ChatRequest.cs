@@ -24,6 +24,7 @@ public class ChatRequest : BaseRequest
 
             if (chatStr.Contains("遊戲開始倒數"))
             {
+                gameFace.ShowTip(chatStr);
                 gameFace.PlaySound("StartDountDown");
             }
 

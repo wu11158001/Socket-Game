@@ -200,8 +200,7 @@ public class RoomPanel : BasePanel
                 break;
             case ReturnCode.Succeed:
                 start_Btn.enabled = false;
-                leave_Btn.enabled = false;
-                uiManager.ShowTip("準備開始遊戲");
+                leave_Btn.enabled = false;                
                 break;
         }
     }
