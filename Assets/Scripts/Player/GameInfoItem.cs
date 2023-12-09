@@ -10,7 +10,8 @@ public class GameInfoItem : MonoBehaviour
     [SerializeField]
     private Slider hp_Sli;
 
-    private int initKill;
+    private string killStr = "慘忍度";
+    private int killCount;
 
     /// <summary>
     /// 設定訊息
@@ -21,10 +22,10 @@ public class GameInfoItem : MonoBehaviour
     public void SetInfo(string name, int hp, int kills)
     {
         userName_Txt.text = name;
-        totalKill_Txt.text = $"慘忍度:{kills}";
+        totalKill_Txt.text = $"{killStr}:{kills}";
         hp_Sli.value = hp;
 
-        initKill = kills;
+        killCount = kills;
     }
 
     /// <summary>
@@ -32,7 +33,7 @@ public class GameInfoItem : MonoBehaviour
     /// </summary>
     public void AddKillCount()
     {
-        initKill++;
-        totalKill_Txt.text = $"擊殺數:{initKill}";
+        killCount++;
+        totalKill_Txt.text = $"{killStr}:{killCount}";
     }
 }
